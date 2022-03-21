@@ -6,8 +6,8 @@
         mc:Ignorable="d"
         Title="Расчет расхода продуктов на выпущенные изделия"
         MaxWidth="1100" MinWidth="1000"
-        d:DesignHeight="507.531" d:DesignWidth="986.538">
-    
+        Height="600">
+
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
@@ -22,8 +22,8 @@
         <!--Header-->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition  Width="2*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Документ">
                 <StackPanel Grid.IsSharedSizeScope="True">
@@ -66,7 +66,7 @@
                     </Grid>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Grid.Column="1"  Header="Организация">
+            <GroupBox Grid.Column="1"  Header="Организация" Margin="5,0,0,0">
                 <StackPanel  Grid.IsSharedSizeScope="True">
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
@@ -109,27 +109,24 @@
                 </StackPanel>
             </GroupBox>
         </Grid>
-
-        <TabControl Grid.Row="1" Margin="0,5">
-            <TabItem Header="Продукты">
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <DataGrid Grid.Row="1" HeadersVisibility="Column"
-                              CanUserAddRows="True"
-                              CanUserDeleteRows="True"
-                              ItemsSource="{Binding Path=Products}"
-                              AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Path=Name}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Изделия">
-                <Grid Margin="5">
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="Продукты">
+                <DataGrid Grid.Row="1" HeadersVisibility="Column" Margin="0,5,0,0"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="True"
+                      ItemsSource="{Binding Path=Products}"
+                      AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Path=Name}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Изделия"  Margin="5,0,0,0">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
@@ -138,27 +135,26 @@
                         <Button Padding="20, 0" Margin="0,5" Content="Создать" Click="CreateDishOnClick"/>
                     </StackPanel>
                     <DataGrid Grid.Row="1" 
-                              x:Name="DishesDataGrid"
-                              HeadersVisibility="Column" 
-                              ItemsSource="{Binding Path=Dishes}"
-                              AutoGenerateColumns="False" 
-                              IsReadOnly="True"
-                              SelectionMode="Single"
-                              SelectionUnit="FullRow"
-                              MouseDoubleClick="DataGridOnMouseDoubleClick">
+                      x:Name="DishesDataGrid"
+                      HeadersVisibility="Column" 
+                      ItemsSource="{Binding Path=Dishes}"
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      MouseDoubleClick="DataGridOnMouseDoubleClick">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Path=Name}"/>
                             <DataGridTextColumn Header="Стоимость" Width="*" Binding="{Binding Path=Price}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
-
-            </TabItem>
-        </TabControl>
+            </GroupBox>
+        </Grid>
 
         <StackPanel Grid.Row="2" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5">
-        <Button Content="Сформировать отчет" Width="160"/>
-        <Button Content="Подписать" Margin="15,0" Width="160"/>
+            <Button Content="Сформировать отчет" Width="160"/>
+            <Button Content="Подписать" Margin="15,0" Width="160"/>
         </StackPanel>
     </Grid>
 </Window>
