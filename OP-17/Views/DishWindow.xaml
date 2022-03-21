@@ -5,98 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:OP_17.ViewModels"
         mc:Ignorable="d"
-        Title="Свойства рецепта" Width="500" Height="400" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+        Title="Свойства рецепта" Width="500" Height="600" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         </Style>
     </Window.Resources>
+
     <Grid  Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TabControl>
-            <TabItem Header="Общие" >
-                <StackPanel Margin="5">
-                    <StackPanel Grid.IsSharedSizeScope="True">
-                        <Grid Margin="0,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="DocLabel"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition  Width="Auto"/>
-                                <ColumnDefinition  Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label  Grid.Column="0" Content="Наименование" VerticalAlignment="Center"/>
-                            <TextBox Grid.Column="1" Text="{Binding Path=Name}"/>
-                            <Label Grid.Column="2" Content="Код" VerticalAlignment="Center"/>
-                            <TextBox  Grid.Column="3" Width="100" Text="{Binding Path=Code}"/>
-                        </Grid>
-                        <Grid Margin="0,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="DocLabel"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Цена продажи" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Text="{Binding Path=Price}" Grid.Column="1" Width="100"  HorizontalContentAlignment="Right" />
-                        </Grid>
-                    </StackPanel>
-                    <GroupBox Header="Выпуск за отчетный период" Width="Auto">
-                        <StackPanel Grid.IsSharedSizeScope="True">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Label  Grid.Column="0" Content="Дата" />
-                                <Label Grid.Column="1" Content="Количество" />
-                            </Grid>
-                            <ItemsControl ItemsSource="{Binding Path=Sales}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="0,5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Grid.Row="0" Grid.Column="0" Content="{Binding Path=Date.Date }" ContentStringFormat="dd.MM.yyyy"  VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="0" Grid.Column="1" Width="70" Text="{Binding Path=Count}" Margin="5,0"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </GroupBox>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Продукты">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="5">
                 <StackPanel Grid.IsSharedSizeScope="True">
-                    <Grid>
+                    <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Product"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="DocLabel"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition  Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label  Grid.Column="0" Content="Наименование" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Text="{Binding Path=Name}"/>
+                        <Label Grid.Column="2" Content="Код" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Column="3" Width="100" Text="{Binding Path=Code}"/>
+                    </Grid>
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="DocLabel"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label  Grid.Column="0" Content="Имя продукта"  />
-                        <Label Grid.Column="1" Content="Количество"  />
+                        <Label Grid.Row="0" Grid.Column="0" Content="Цена продажи" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="0" Text="{Binding Path=Price}" Grid.Column="1" Width="100"  HorizontalContentAlignment="Right" />
                     </Grid>
-                    <ItemsControl ItemsSource="{Binding Path=DishProducts}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Product"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Path=Product.Name }" ContentStringFormat="dd.MM.yyyy"  VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="0" Grid.Column="1" Width="70" Text="{Binding Path=Count}" Margin="5,0"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
                 </StackPanel>
-            </TabItem>
-        </TabControl>
+                <GroupBox Header="Выпуск за отчетный период" Width="Auto">
+                    <StackPanel Grid.IsSharedSizeScope="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label  Grid.Column="0" Content="Дата" />
+                            <Label Grid.Column="1" Content="Количество" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Path=Sales}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Content="{Binding Path=Date.Date }" ContentStringFormat="dd.MM.yyyy"  VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Width="70" Text="{Binding Path=Count}" Margin="5,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Продукты">
+                    <StackPanel Grid.IsSharedSizeScope="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Product"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label  Grid.Column="0" Content="Имя продукта"  />
+                            <Label Grid.Column="1" Content="Количество"  />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Path=DishProducts}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="Product"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Content="{Binding Path=Product.Name }" ContentStringFormat="dd.MM.yyyy"  VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Width="70" Text="{Binding Path=Count}" Margin="5,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
         <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0, 5,0,0">
             <Button Content="Отмена" Width="100"></Button>
             <Button Content="Ок" Width="100" Margin="15, 0"></Button>
