@@ -157,8 +157,8 @@
         </TabControl>
 
         <StackPanel Grid.Row="2" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5">
-        <Button Content="Сформировать отчет"/>
-        <Button Content="Подписать" Margin="15,0"/>
+        <Button Content="Сформировать отчет" Width="160"/>
+        <Button Content="Подписать" Margin="15,0" Width="160"/>
         </StackPanel>
     </Grid>
 </Window>
