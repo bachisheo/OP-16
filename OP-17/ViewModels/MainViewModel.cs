@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -10,7 +11,7 @@ namespace OP_17.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
-    #region DishesPage
+    #region Header
 
     public string DocumentNumber 
     {
@@ -49,6 +50,15 @@ public class MainViewModel : ObservableObject
     public string CompanyUnit { get; set; }
     public string CompanyOKDP { get; set; }
 
+    private DateTime _documentDateTime;
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+    private string _documentNumber;
+
+    #endregion
+
+    #region DishesPage
+
     public ObservableCollection<DateTime?> SalesDates
     {
         get
@@ -66,31 +76,7 @@ public class MainViewModel : ObservableObject
 
     public ObservableCollection<DishViewModel> Dishes { get; set; }
 
-    public MainViewModel()
-    {
-        DocumentOperation = string.Empty;
-        PropertyChanged += OnPropertyChangedHandler;
-        DocumentDateTime = DateTime.Now;
-        DocumentNumber = "1";
-        Dishes = new ObservableCollection<DishViewModel>();
-        Dishes.CollectionChanged += DishesCollectionChanged;
-        _salesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
-        _startDate = DateTime.Now.AddDays(-4);
-        _endDate = DateTime.Now;
-        
-    }
-
-    private void OnPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(StartDate):
-            case nameof(EndDate):
-                OnPropertyChanged(nameof(SalesDates));
-                break;
-        }
-    }
-
+    
     private void DishesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
@@ -101,12 +87,49 @@ public class MainViewModel : ObservableObject
         }
     }
 
-    private DateTime _documentDateTime;
-    private DateTime? _startDate;
-    private DateTime? _endDate;
     private readonly ObservableCollection<DateTime?> _salesDates;
-    private string _documentNumber;
 
     #endregion
+
+    #region ProductsPage
+
+    public ObservableCollection<string> Products { get; }
+
+
+
+    #endregion
+
+    public MainViewModel()
+    {
+        CompanyName = string.Empty;
+        CompanyOKPO = string.Empty;
+        CompanyUnit = string.Empty;
+        CompanyOKDP = string.Empty;
+        DocumentOperation = string.Empty;
+        PropertyChanged += OnPropertyChangedHandler;
+        DocumentDateTime = DateTime.Now;
+        _documentNumber = "1";
+        Dishes = new ObservableCollection<DishViewModel>();
+        Dishes.CollectionChanged += DishesCollectionChanged;
+        _salesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
+        _startDate = DateTime.Now.AddDays(-4);
+        _endDate = DateTime.Now;
+
+        Products = new ObservableCollection<string>(new string[5]);
+    }
+
+  
+
+    private void OnPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(StartDate):
+            case nameof(EndDate):
+                OnPropertyChanged(nameof(SalesDates));
+                break;
+
+        }
+    }
 
 }

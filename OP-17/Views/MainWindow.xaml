@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="Форма ОП-17"
         MinWidth="1200" MinHeight="450"
-        d:DataContext="{d:DesignInstance design:DesignMainViewModel, IsDesignTimeCreatable=True}" d:DesignHeight="602.48" d:DesignWidth="1347" >
+        d:DataContext="{d:DesignInstance design:DesignMainViewModel, IsDesignTimeCreatable=True}" d:DesignHeight="602.48" d:DesignWidth="1278" >
     <Window.Resources>
         <converters:DateConverter x:Key="DateConverter"/>
         <DataTemplate x:Key="DataGridHeaderTemplate">
@@ -23,6 +23,7 @@
             </Grid>
         </DataTemplate>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -202,7 +203,7 @@
                         Name="DishesTable"
                         CanUserAddRows="True"
                         CanUserDeleteRows="True"
-                        CanUserResizeColumns="True"
+                        CanUserResizeColumns="False"
                         CanUserReorderColumns="False"
                         CanUserResizeRows="False"
                         CanUserSortColumns="False"
@@ -227,7 +228,115 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Продукты">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid IsSharedSizeScope="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{Binding ElementName=DishColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FirstProductColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FirstProductSumColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=SecondProductColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=SecondProductSumColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=ThirdProductColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=ThirdProductSumColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FourthProductColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FourthProductSumColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FifthProductColumn, Path=ActualWidth}"/>
+                            <ColumnDefinition Width="{Binding ElementName=FifthProductSumColumn, Path=ActualWidth}"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Border Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="Блюдо" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                        </Border>
 
+                        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBox TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBox TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="4" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBox TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="6" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBox TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="8" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="9" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                            <TextBox TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="10" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                        </Border>
+
+
+
+                    </Grid>
+                    <DataGrid  
+                        Grid.Row="1"
+                        Name="ProductsTable"
+                        CanUserAddRows="True"
+                        CanUserDeleteRows="True"
+                        CanUserResizeColumns="False"
+                        CanUserReorderColumns="False"
+                        CanUserResizeRows="False"
+                        CanUserSortColumns="False"
+                        AutoGenerateColumns="False"
+                        HeadersVisibility="None"
+                        ItemsSource="{Binding Dishes}"
+                        VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="DishColumn" Binding="{Binding Name}" Width="2*" />
+                            <DataGridTextColumn x:Name="FirstProductColumn" Binding="{Binding ProductsCounts[0]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FirstProductSumColumn" Binding="{Binding ProductsAllCounts[0]}" Width="1*"  IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="SecondProductColumn" Binding="{Binding ProductsCounts[1]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="SecondProductSumColumn" Binding="{Binding ProductsAllCounts[1]}" Width="1*"  IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="ThirdProductColumn" Binding="{Binding ProductsCounts[2]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="ThirdProductSumColumn" Binding="{Binding ProductsAllCounts[2]}" Width="1*"  IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="FourthProductColumn" Binding="{Binding ProductsCounts[3]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FourthProductSumColumn" Binding="{Binding ProductsAllCounts[3]}" Width="1*"  IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="FifthProductColumn" Binding="{Binding ProductsCounts[4]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FifthProductSumColumn" Binding="{Binding ProductsAllCounts[4]}" Width="1*"  IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
         </TabControl>
 
