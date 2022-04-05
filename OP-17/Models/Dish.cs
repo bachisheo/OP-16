@@ -7,7 +7,8 @@ namespace OP_17.Models;
 public class Dish
 {
     public string Name { get; set; } 
-    public string Code { get; set; }
+    public int Code { get; set; }
+    public int Card { get; set; }
     public double Price { get; set; }
     public ICollection<DishSale> Sales { get; set; }
     public ICollection<DishProduct> Products { get; set; }
@@ -15,7 +16,7 @@ public class Dish
     public Dish()
     {
         Name = "";
-        Code = "";
+        Code = 1;
         Products = new HashSet<DishProduct>();
         Sales = new HashSet<DishSale>();    
     }

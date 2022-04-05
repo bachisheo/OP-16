@@ -1,34 +1,68 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
-using System.Windows.Documents;
-using OP_17.Models;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace OP_17.ViewModels;
 
-public class DishViewModel : ViewModelBase
+public class DishViewModel:ObservableObject
 {
-    public string? Name { get; set; }
-    public string Price { get; set; }
-    public string Code { get; set; }
-    public ObservableCollection<DishSale> Sales { get; set; }
-    public ObservableCollection<DishProduct> DishProducts { get; set; }
 
-    public DishViewModel(Dish dish, ObservableCollection<Product> products)
+    public string Name
     {
-        Name = dish.Name;
-        Price = dish.Price.ToString();
-        Code = dish.Code;
-        Sales = new ObservableCollection<DishSale>(dish.Sales);
-        DishProducts = new ObservableCollection<DishProduct>(dish.Products);
-        foreach (var product in products)
-        {
-        DishProducts.Add(new DishProduct{Count = 0, Dish = dish, Product = product});
+        get => _name;
+        set => SetProperty(ref _name, value);
+    } 
+    public int Code 
+    {
+        get => _code;
+        set => SetProperty(ref _code, value);
+    } 
+    public int Card
+    {
+        get => _card;
+        set => SetProperty(ref _card, value);
+    } 
+    public double Price
+    {
+        get => _price;
+        set => SetProperty(ref _price, value);
+    } 
 
-        }
-        Sales.Add(new DishSale { Count = 2, Date = new DateTime(2022, 3, 19) });
-        Sales.Add(new DishSale { Count = 5, Date = new DateTime(2022, 3, 20) });
+    public ObservableCollection<int> Sales { get; set; }
+
+    public int AllSales => Sales.Sum();
+    public double AllPrice => AllSales * Price;
+   
+    public DishViewModel()
+    {
+        _name = string.Empty;
+        Sales = new ObservableCollection<int>(new int[5]);
+        Sales.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Sales));
+        this.PropertyChanged += OnPropertyChangedHandler;
     }
+
+    private void OnPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Sales):
+                OnPropertyChanged(nameof(AllSales));
+                break;
+            case nameof(Price):
+                OnPropertyChanged(nameof(AllPrice));
+                break;
+            case nameof(AllSales):
+                OnPropertyChanged(nameof(AllPrice));
+                break;
+        }
+    }
+
+    private string _name;
+    private int _code;
+    private int _card;
+    private double _price;
 }
