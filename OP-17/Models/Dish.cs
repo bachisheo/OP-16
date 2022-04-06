@@ -7,9 +7,9 @@ namespace OP_17.Models;
 public class Dish
 {
     public string Name { get; set; } 
-    public int Code { get; set; }
-    public int Card { get; set; }
-    public double Price { get; set; }
+    public int? Code { get; set; }
+    public int? Card { get; set; }
+    public double? Price { get; set; }
     public ICollection<DishSale> Sales { get; set; }
     public ICollection<DishProduct> Products { get; set; }
 

@@ -257,7 +257,7 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[0]}"/>
                         </Border>
                         <Border Grid.Row="1" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
                             <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
@@ -267,7 +267,7 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[1]}"/>
                         </Border>
                         <Border Grid.Row="1" Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1">
                             <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
@@ -277,7 +277,7 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"  Text="{Binding Products[2]}"/>
                         </Border>
                         <Border Grid.Row="1" Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
                             <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
@@ -287,7 +287,7 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[3]}"/>
                         </Border>
                         <Border Grid.Row="1" Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
                             <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
@@ -297,7 +297,7 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="9" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,1,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[4]}"/>
                         </Border>
                         <Border Grid.Row="1" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
                             <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
@@ -341,7 +341,7 @@
         </TabControl>
 
         <StackPanel Grid.Row="3" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,15,0,15">
-            <Button Content="Сформировать отчет" Width="160" Height="30" Margin="15,0"/>
+            <Button Content="Сформировать отчет" Command="{Binding GenerateReportCommand}" Width="160" Height="30" Margin="15,0"/>
             <Button Content="Подписать" Width="160" Margin="15,0"/>
         </StackPanel>
     </Grid>

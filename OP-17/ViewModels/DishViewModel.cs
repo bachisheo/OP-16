@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OP_17.Models;
 
 namespace OP_17.ViewModels;
 
@@ -38,7 +39,9 @@ public class DishViewModel:ObservableObject
     public ObservableCollection<int?> ProductsCounts { get; set; }
 
     public List<int?> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
+
    
+
     public DishViewModel()
     {
         this.PropertyChanged += ThisOnPropertyChanged;
