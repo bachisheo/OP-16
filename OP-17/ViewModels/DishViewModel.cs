@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -16,40 +14,40 @@ public class DishViewModel:ObservableObject
         get => _name;
         set => SetProperty(ref _name, value);
     } 
-    public int Code 
+    public int? Code 
     {
         get => _code;
         set => SetProperty(ref _code, value);
     } 
-    public int Card
+    public int? Card
     {
         get => _card;
         set => SetProperty(ref _card, value);
     } 
-    public double Price
+    public double? Price
     {
         get => _price;
         set => SetProperty(ref _price, value);
     } 
 
-    public ObservableCollection<int> Sales { get; set; }
+    public ObservableCollection<int?> Sales { get; set; }
 
-    public int AllSales => Sales.Sum();
-    public double AllPrice => AllSales * Price;
+    public int? AllSales => Sales.Sum();
+    public double? AllPrice => AllSales * Price;
 
-    public ObservableCollection<int> ProductsCounts { get; set; }
+    public ObservableCollection<int?> ProductsCounts { get; set; }
 
-    public List<int> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
+    public List<int?> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
    
     public DishViewModel()
     {
         this.PropertyChanged += ThisOnPropertyChanged;
 
         _name = string.Empty;
-        Sales = new ObservableCollection<int>(new int[5]);
+        Sales = new ObservableCollection<int?>(new int?[5]);
         Sales.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Sales));
 
-        ProductsCounts = new ObservableCollection<int>(new int[5]);
+        ProductsCounts = new ObservableCollection<int?>(new int?[5]);
         ProductsCounts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ProductsCounts));
     }
 
@@ -74,7 +72,7 @@ public class DishViewModel:ObservableObject
     }
 
     private string _name;
-    private int _code;
-    private int _card;
-    private double _price;
+    private int? _code;
+    private int? _card;
+    private double? _price;
 }
