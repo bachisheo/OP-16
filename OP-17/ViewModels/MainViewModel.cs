@@ -5,9 +5,11 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OP_17.Models;
+using OP_17.Services;
 
 namespace OP_17.ViewModels;
 
@@ -15,7 +17,7 @@ public class MainViewModel : ObservableObject
 {
     #region Header
 
-    public string DocumentNumber 
+    public string DocumentNumber
     {
         get => _documentNumber;
         set => SetProperty(ref _documentNumber, value);
@@ -90,20 +92,20 @@ public class MainViewModel : ObservableObject
 
     public Dish GetDish(DishViewModel dishVM)
     {
-        Dish dish = new Dish {Card = dishVM.Card, Code = dishVM.Code, Name = dishVM.Name, Price = dishVM.Price};
+        Dish dish = new Dish { Card = dishVM.Card, Code = dishVM.Code, Name = dishVM.Name, Price = dishVM.Price };
         dish.Products = new List<DishProduct>();
-        for(var i = 0; i < Products.Count; i++)
-            dish.Products.Add(new DishProduct{Count = dishVM.ProductsCounts[i], Dish=dish, Product = new Product{Name = Products[i]}});
+        for (var i = 0; i < Products.Count; i++)
+            dish.Products.Add(new DishProduct(dish, new Product { Name = Products[i] }) { Count = dishVM.ProductsCounts[i] });
         dish.Sales = new List<DishSale>();
-        for(var i = 0; i < SalesDates.Count; i++)
-            dish.Sales.Add(new DishSale{Count = dishVM.Sales[i], Date = SalesDates[i]});
+        for (var i = 0; i < SalesDates.Count; i++)
+            dish.Sales.Add(new DishSale { Count = dishVM.Sales[i], Date = SalesDates[i] });
         return dish;
     }
 
     public ObservableCollection<DishViewModel> Dishes { get; set; }
 
     public RelayCommand GenerateReportCommand { get; set; }
-    
+
     public MainViewModel()
     {
         CompanyName = string.Empty;
@@ -124,12 +126,13 @@ public class MainViewModel : ObservableObject
 
         GenerateReportCommand = new RelayCommand(() =>
         {
-            var a = GetDishes();
-            ;
+            var exporter = new ExcelExporter();
+            var file = exporter.Export(this);
+            MessageBox.Show($"Сохранено как {file}.");
         });
     }
 
-  
+
     private void DishesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
