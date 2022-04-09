@@ -36,9 +36,9 @@ public class DishViewModel:ObservableObject
     public int? AllSales => Sales.Sum();
     public double? AllPrice => AllSales * Price;
 
-    public ObservableCollection<int?> ProductsCounts { get; set; }
+    public ObservableCollection<double?> ProductsCounts { get; set; }
 
-    public List<int?> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
+    public List<double?> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
 
    
 
@@ -50,7 +50,7 @@ public class DishViewModel:ObservableObject
         Sales = new ObservableCollection<int?>(new int?[5]);
         Sales.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Sales));
 
-        ProductsCounts = new ObservableCollection<int?>(new int?[5]);
+        ProductsCounts = new ObservableCollection<double?>(new double?[5]);
         ProductsCounts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ProductsCounts));
     }
 

@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OP_17.Models;
 using OP_17.Services;
+using OP_17.Views;
 
 namespace OP_17.ViewModels;
 
@@ -88,22 +89,16 @@ public class MainViewModel : ObservableObject
 
     #endregion
 
-    public List<Dish> GetDishes() => Dishes.Select(GetDish).ToList();
+    #region Signature
 
-    public Dish GetDish(DishViewModel dishVM)
-    {
-        Dish dish = new Dish { Card = dishVM.Card, Code = dishVM.Code, Name = dishVM.Name, Price = dishVM.Price };
-        dish.Products = new List<DishProduct>();
-        for (var i = 0; i < Products.Count; i++)
-            dish.Products.Add(new DishProduct(dish, new Product { Name = Products[i] }) { Count = dishVM.ProductsCounts[i] });
-        dish.Sales = new List<DishSale>();
-        for (var i = 0; i < SalesDates.Count; i++)
-            dish.Sales.Add(new DishSale { Count = dishVM.Sales[i], Date = SalesDates[i] });
-        return dish;
-    }
+    public SignatureViewModel SignatureVM { get; set; }
+
+    #endregion
+
 
     public ObservableCollection<DishViewModel> Dishes { get; set; }
 
+    public RelayCommand SignCommand { get; set; }
     public RelayCommand GenerateReportCommand { get; set; }
 
     public MainViewModel()
@@ -130,8 +125,19 @@ public class MainViewModel : ObservableObject
             var file = exporter.Export(this);
             MessageBox.Show($"Сохранено как {file}.");
         });
+
+        SignatureVM = new SignatureViewModel();
+        SignCommand = new RelayCommand(OnSign);
     }
 
+    private void OnSign()
+    {
+        SignatureWindow signatureWindow = new SignatureWindow();
+        signatureWindow.ViewModel = SignatureVM;
+        var result = signatureWindow.ShowDialog();
+        if (result == true)
+            SignatureVM = signatureWindow.ViewModel;
+    }
 
     private void DishesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

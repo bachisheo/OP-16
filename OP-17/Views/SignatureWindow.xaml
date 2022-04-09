@@ -1,0 +1,54 @@
+﻿<Window x:Class="OP_17.Views.SignatureWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OP_17.Views"
+        xmlns:viewModels="clr-namespace:OP_17.ViewModels"
+        d:DataContext="{d:DesignInstance viewModels:SignatureViewModel, IsDesignTimeCreatable=True}"
+        mc:Ignorable="d"
+        Title="SignatureWindow" Height="300" Width="620" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Расчет составил" VerticalAlignment="Center" Margin="5"/>
+        <StackPanel Grid.Row="0" Grid.Column="1"  Margin="5">
+            <TextBlock Text="Должность:"/>
+            <TextBox Margin=" 0,5" Text="{Binding FormerPost}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+            <TextBlock Text="Расшифровка подписи:"/>
+            <TextBox Margin=" 0,5" Text="{Binding Former}"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Руководитель организации" VerticalAlignment="Center" Margin="5"/>
+        <StackPanel Grid.Row="1" Grid.Column="1"  Margin="5">
+            <TextBlock Text="Должность:"/>
+            <TextBox Margin=" 0,5" Text="{Binding CompanyHeadPost}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="5">
+            <TextBlock Text="Расшифровка подписи:"/>
+            <TextBox Margin=" 0,5" Text="{Binding CompanyHead}"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Заведующий производством" VerticalAlignment="Center" Margin="5"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="5">
+            <TextBlock Text="Расшифровка подписи:"/>
+            <TextBox Margin=" 0,5" Text="{Binding ProductionHead}"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" Orientation="Horizontal" FlowDirection="RightToLeft" VerticalAlignment="Bottom">
+            <Button Content="ОК"  Margin="5" Height="30" Width="70" Command="{Binding SubmitCommand}"/>
+            <Button Content="Отмена" Margin="5" Height="30" Width="70" Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </Grid>
+</Window>

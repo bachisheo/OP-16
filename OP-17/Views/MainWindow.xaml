@@ -130,7 +130,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="ОКДП "/>
-                    <TextBox Name="CompanyOKDP" Grid.Column="1" Text="{Binding CompanyOKDP}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
+                    <TextBox Name="CompanyOKDP" Grid.Column="1" Text="{Binding CompanyOKDP}" />
                 </Grid>
 
             </StackPanel>
@@ -342,7 +342,7 @@
 
         <StackPanel Grid.Row="3" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,15,0,15">
             <Button Content="Сформировать отчет" Command="{Binding GenerateReportCommand}" Width="160" Height="30" Margin="15,0"/>
-            <Button Content="Подписать" Width="160" Margin="15,0"/>
+            <Button Content="Подписать" Command="{Binding SignCommand}"  Width="160" Margin="15,0"/>
         </StackPanel>
     </Grid>
 

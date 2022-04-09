@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
@@ -49,6 +50,37 @@ public class ExcelExporter
             field.Value = product;
         foreach (var (field, product) in GetMergedCells(fields["salesDates"]).Zip(mainVM.SalesDates))
             field.Value = product;
+
+        int curRow = 26;
+        foreach (var dishVM in mainVM.Dishes)
+        {
+            FillDish(dishVM, curRow);
+            curRow++;
+        }
+
+        fields["formerPost"].Value = mainVM.SignatureVM.FormerPost;
+        fields["former"].Value = mainVM.SignatureVM.Former;
+        fields["productionHead"].Value = mainVM.SignatureVM.ProductionHead;
+        fields["companyHeadPost"].Value = mainVM.SignatureVM.CompanyHeadPost;
+        fields["companyHead"].Value = mainVM.SignatureVM.CompanyHead;
+    }
+
+    private void FillDish(DishViewModel dishVM, int row)
+    {
+        var rowCells = GetMergedCells(_sheet.Cells[row, 1, row, 81]).ToList();
+        rowCells[0].Value = dishVM.Card;
+        rowCells[1].Value = dishVM.Name;
+        rowCells[2].Value = dishVM.Code;
+        for (int i = 0; i < 5; i++)
+            rowCells[3 + i].Value = dishVM.Sales[i];
+        rowCells[8].Value = dishVM.AllSales;
+        rowCells[9].Value = dishVM.Price;
+        rowCells[10].Value = dishVM.AllPrice;
+        for (int i = 0; i < 5; i++)
+        {
+            rowCells[11 + 2*i].Value = dishVM.ProductsCounts[i];
+            rowCells[12 + 2*i].Value = dishVM.ProductsAllCounts[i];
+        }
     }
 
     private void CreateAndOpenFile()
@@ -71,6 +103,12 @@ public class ExcelExporter
         fields["products"] = GetField("AS18:CF19");
         fields["salesDates"] = GetField("R18:AD19");
         fields["salesDates"].Style.Numberformat.Format = "dd.mm";
+        fields["formerPost"] = GetField("J38");
+        fields["former"] = GetField("AB38");
+        fields["productionHead"] = GetField("BP38");
+        fields["companyHeadPost"] = GetField("R40");
+        fields["companyHead"] = GetField("AP40");
+
     }
 
     private ExcelRange GetField(string fieldAddr, ExcelHorizontalAlignment horizontalAlignment = ExcelHorizontalAlignment.Center)
@@ -86,7 +124,6 @@ public class ExcelExporter
              .Where(mc => range.Select(c => c.FullAddress)
                  .Intersect(mc.Select(c => c.FullAddress)).Count() != 0).OrderBy(c => c.Start, new ExcelCellComparer());
     }
-
 
 
     private ExcelPackage _package = null!;
