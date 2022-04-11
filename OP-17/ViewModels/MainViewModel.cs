@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -150,7 +152,13 @@ public class MainViewModel : ObservableObject
         {
             var exporter = new ExcelExporter();
             var file = exporter.Export(this);
-            MessageBox.Show($"Сохранено как {file}.");
+           var res = MessageBox.Show($"Сохранено как {file}. Открыть файл?", "", MessageBoxButton.YesNo);
+           if (res != MessageBoxResult.Yes) return;
+
+           FileInfo fi = new FileInfo(file);
+           ProcessStartInfo proc = new ProcessStartInfo(fi.FullName);
+           proc.UseShellExecute = true;
+           Process.Start(proc);
         });
 
         SignCommand = new RelayCommand(OnSign);
