@@ -8,7 +8,6 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OP_17.Models;
 using OP_17.Services;
 using OP_17.Views;
 
@@ -96,7 +95,35 @@ public class MainViewModel : ObservableObject
     #endregion
 
 
-    public ObservableCollection<DishViewModel> Dishes { get; set; }
+    public LimitedSizeObservableCollection<DishViewModel> Dishes { get; set; }
+
+    public List<int?> SummarySales => Dishes
+        .Select(d => d.Sales)
+        .Aggregate(new ObservableCollection<int?>(new int?[5]),
+            (sum, list) =>
+                new ObservableCollection<int?>(sum.Zip(list,
+                    (x, y) => x == null ? y : y == null ? x : x + y)))
+        .ToList();
+
+    public int? SummaryAllSales => Dishes.Sum(d => d.AllSales);
+
+    public double? SummaryAllPrice => Dishes.Sum(d => d.AllPrice);
+
+
+    public List<double?> SummaryAllProductCounts => Dishes
+        .Select(d => d.AllProductCounts)
+        .Aggregate(new ObservableCollection<double?>(new double?[5]),
+            (sum, list) =>
+                new ObservableCollection<double?>(sum.Zip(list,
+                    (x, y) => x == null ? y : y == null ? x : x + y)))
+        .ToList();
+
+    public RelayCommand DebugCommand => new(Debug);
+
+    private void Debug()
+    {
+
+    }
 
     public RelayCommand SignCommand { get; set; }
     public RelayCommand GenerateReportCommand { get; set; }
@@ -108,10 +135,10 @@ public class MainViewModel : ObservableObject
         CompanyUnit = string.Empty;
         CompanyOKDP = string.Empty;
         DocumentOperation = string.Empty;
-        PropertyChanged += OnPropertyChangedHandler;
+        PropertyChanged += ThisOnPropertyChanged;
         DocumentDateTime = DateTime.Now;
         _documentNumber = "1";
-        Dishes = new ObservableCollection<DishViewModel>();
+        Dishes = new LimitedSizeObservableCollection<DishViewModel>(5);
         Dishes.CollectionChanged += DishesCollectionChanged;
         _salesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
         _startDate = DateTime.Now.AddDays(-4);
@@ -126,31 +153,29 @@ public class MainViewModel : ObservableObject
             MessageBox.Show($"Сохранено как {file}.");
         });
 
-        SignatureVM = new SignatureViewModel();
         SignCommand = new RelayCommand(OnSign);
     }
 
     private void OnSign()
     {
-        SignatureWindow signatureWindow = new SignatureWindow();
-        signatureWindow.ViewModel = SignatureVM;
+        SignatureWindow signatureWindow = new SignatureWindow { ViewModel = SignatureVM };
         var result = signatureWindow.ShowDialog();
         if (result == true)
             SignatureVM = signatureWindow.ViewModel;
     }
 
-    private void DishesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void DishesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
             var dish = (DishViewModel)e.NewItems![0]!;
             dish.Card = Dishes.Select(d => d.Card).ToImmutableSortedSet().Last() + 1;
             dish.Code = Dishes.Select(d => d.Code).ToImmutableSortedSet().Last() + 1;
+            dish.PropertyChanged += DishOnPropertyChanged;
         }
     }
 
-
-    private void OnPropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
+    private void ThisOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
@@ -162,4 +187,39 @@ public class MainViewModel : ObservableObject
         }
     }
 
+    private void DishOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(DishViewModel.Sales):
+                OnPropertyChanged(nameof(SummarySales));
+                break;
+            case nameof(DishViewModel.AllSales):
+                OnPropertyChanged(nameof(SummaryAllSales));
+                break;
+            case nameof(DishViewModel.AllPrice):
+                OnPropertyChanged(nameof(SummaryAllPrice));
+                break;
+            case nameof(DishViewModel.ProductsCounts):
+                OnPropertyChanged(nameof(SummaryAllProductCounts));
+                break;
+        }
+    }
+
+}
+
+public class LimitedSizeObservableCollection<T> : ObservableCollection<T>
+{
+    public int Capacity { get; }
+
+    public LimitedSizeObservableCollection(int capacity)
+    {
+        Capacity = capacity;
+    }
+
+    protected override void InsertItem(int index, T item)
+    {
+        if (Count < Capacity)
+            base.InsertItem(index, item);
+    }
 }

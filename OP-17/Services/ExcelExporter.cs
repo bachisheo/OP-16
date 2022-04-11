@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
@@ -36,20 +35,20 @@ public class ExcelExporter
 
     private void FillFields(MainViewModel mainVM)
     {
-        fields["companyName"].Value = mainVM.CompanyName;
-        fields["companyOKPO"].Value = mainVM.CompanyOKPO;
-        fields["companyUnit"].Value = mainVM.CompanyUnit;
-        fields["companyOKDP"].Value = mainVM.CompanyOKDP;
-        fields["operation"].Value = mainVM.DocumentOperation;
-        fields["docNumber"].Value = Convert.ToInt32(mainVM.DocumentNumber);
-        fields["docDate"].Value = mainVM.DocumentDateTime.ToString("dd.MM.yyyy");
-        fields["startDate"].Value = mainVM.StartDate?.ToString("dd.MM.yyyy");
-        fields["endDate"].Value = mainVM.EndDate?.ToString("dd.MM.yyyy");
+        _fields["companyName"].Value = mainVM.CompanyName;
+        _fields["companyOKPO"].Value = mainVM.CompanyOKPO;
+        _fields["companyUnit"].Value = mainVM.CompanyUnit;
+        _fields["companyOKDP"].Value = mainVM.CompanyOKDP;
+        _fields["operation"].Value = mainVM.DocumentOperation;
+        _fields["docNumber"].Value = Convert.ToInt32(mainVM.DocumentNumber);
+        _fields["docDate"].Value = mainVM.DocumentDateTime.ToString("dd.MM.yyyy");
+        _fields["startDate"].Value = mainVM.StartDate?.ToString("dd.MM.yyyy");
+        _fields["endDate"].Value = mainVM.EndDate?.ToString("dd.MM.yyyy");
 
-        foreach (var (field, product) in GetMergedCells(fields["products"]).Zip(mainVM.Products))
+        foreach (var (field, product) in GetMergedCells(_fields["products"]).Zip(mainVM.Products))
             field.Value = product;
-        foreach (var (field, product) in GetMergedCells(fields["salesDates"]).Zip(mainVM.SalesDates))
-            field.Value = product;
+        foreach (var (field, saleDate) in GetMergedCells(_fields["salesDates"]).Zip(mainVM.SalesDates))
+            field.Value = saleDate;
 
         int curRow = 26;
         foreach (var dishVM in mainVM.Dishes)
@@ -58,11 +57,18 @@ public class ExcelExporter
             curRow++;
         }
 
-        fields["formerPost"].Value = mainVM.SignatureVM.FormerPost;
-        fields["former"].Value = mainVM.SignatureVM.Former;
-        fields["productionHead"].Value = mainVM.SignatureVM.ProductionHead;
-        fields["companyHeadPost"].Value = mainVM.SignatureVM.CompanyHeadPost;
-        fields["companyHead"].Value = mainVM.SignatureVM.CompanyHead;
+        foreach (var (field, sale) in GetMergedCells(_fields["summarySales"]).Zip(mainVM.SummarySales))
+            field.Value = sale;
+        _fields["summaryAllSales"].Value = mainVM.SummaryAllSales;
+        _fields["summaryAllPrice"].Value = mainVM.SummaryAllPrice;
+        foreach (var (field, productCount) in GetMergedCells(_fields["summaryAllProductCounts"]).Where((_, i) => i % 2 == 1).Zip(mainVM.SummaryAllProductCounts))
+            field.Value = productCount;
+
+        _fields["formerPost"].Value = mainVM.SignatureVM?.FormerPost;
+        _fields["former"].Value = mainVM.SignatureVM?.Former;
+        _fields["productionHead"].Value = mainVM.SignatureVM?.ProductionHead;
+        _fields["companyHeadPost"].Value = mainVM.SignatureVM?.CompanyHeadPost;
+        _fields["companyHead"].Value = mainVM.SignatureVM?.CompanyHead;
     }
 
     private void FillDish(DishViewModel dishVM, int row)
@@ -78,8 +84,8 @@ public class ExcelExporter
         rowCells[10].Value = dishVM.AllPrice;
         for (int i = 0; i < 5; i++)
         {
-            rowCells[11 + 2*i].Value = dishVM.ProductsCounts[i];
-            rowCells[12 + 2*i].Value = dishVM.ProductsAllCounts[i];
+            rowCells[11 + 2 * i].Value = dishVM.ProductsCounts[i];
+            rowCells[12 + 2 * i].Value = dishVM.AllProductCounts[i];
         }
     }
 
@@ -91,23 +97,29 @@ public class ExcelExporter
         _workbook = _package.Workbook;
         _sheet = _workbook.Worksheets.First();
 
-        fields["companyName"] = GetField("A6");
-        fields["companyOKPO"] = GetField("BY6");
-        fields["companyUnit"] = GetField("A8");
-        fields["companyOKDP"] = GetField("BY9");
-        fields["operation"] = GetField("BY10");
-        fields["docNumber"] = GetField("AX13");
-        fields["docDate"] = GetField("BF13");
-        fields["startDate"] = GetField("BN13");
-        fields["endDate"] = GetField("BS13");
-        fields["products"] = GetField("AS18:CF19");
-        fields["salesDates"] = GetField("R18:AD19");
-        fields["salesDates"].Style.Numberformat.Format = "dd.mm";
-        fields["formerPost"] = GetField("J38");
-        fields["former"] = GetField("AB38");
-        fields["productionHead"] = GetField("BP38");
-        fields["companyHeadPost"] = GetField("R40");
-        fields["companyHead"] = GetField("AP40");
+        _fields["companyName"] = GetField("A6");
+        _fields["companyOKPO"] = GetField("BY6");
+        _fields["companyUnit"] = GetField("A8");
+        _fields["companyOKDP"] = GetField("BY9");
+        _fields["operation"] = GetField("BY10");
+        _fields["docNumber"] = GetField("AX13");
+        _fields["docDate"] = GetField("BF13");
+        _fields["startDate"] = GetField("BN13");
+        _fields["endDate"] = GetField("BS13");
+        _fields["products"] = GetField("AS18:CF19");
+        _fields["salesDates"] = GetField("R18:AD19");
+        _fields["salesDates"].Style.Numberformat.Format = "dd.mm";
+
+        _fields["summarySales"] = GetField("R37:AD37");
+        _fields["summaryAllSales"] = GetField("AG37");
+        _fields["summaryAllPrice"] = GetField("AO37");
+        _fields["summaryAllProductCounts"] = GetField("AS37:CC37");
+
+        _fields["formerPost"] = GetField("J38");
+        _fields["former"] = GetField("AB38");
+        _fields["productionHead"] = GetField("BP38");
+        _fields["companyHeadPost"] = GetField("R40");
+        _fields["companyHead"] = GetField("AP40");
 
     }
 
@@ -129,12 +141,12 @@ public class ExcelExporter
     private ExcelPackage _package = null!;
     private ExcelWorkbook _workbook = null!;
     private ExcelWorksheet _sheet = null!;
-    private Dictionary<string, ExcelRange> fields = new();
+    private readonly Dictionary<string, ExcelRange> _fields = new();
 }
 
-class ExcelCellComparer:IComparer<ExcelCellAddress>
+class ExcelCellComparer : IComparer<ExcelCellAddress>
 {
-    public int Compare(ExcelCellAddress? x, ExcelCellAddress? y)
+    public int Compare(ExcelCellAddress x, ExcelCellAddress y)
     {
         if (ReferenceEquals(x, y)) return 0;
         if (ReferenceEquals(null, y)) return 1;

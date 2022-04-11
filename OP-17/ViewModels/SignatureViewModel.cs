@@ -5,13 +5,19 @@ namespace OP_17.ViewModels;
 
 public class SignatureViewModel:ObservableObject
 {
-    public string FormerPost { get; set; }
-    public string Former { get; set; }
-    public string CompanyHead { get; set; }
-    public string CompanyHeadPost { get; set; }
-    public string ProductionHead { get; set; }
+    public SignatureViewModel(RelayCommand submitCommand, RelayCommand cancelCommand)
+    {
+        SubmitCommand = submitCommand;
+        CancelCommand = cancelCommand;
+    }
 
-    public RelayCommand SubmitCommand { get; set; }
+    public string FormerPost { get; set; } = string.Empty;
+    public string Former { get; set; }= string.Empty;
+    public string CompanyHead { get; set; }= string.Empty;
+    public string CompanyHeadPost { get; set; }= string.Empty;
+    public string ProductionHead { get; set; }= string.Empty;
+
+    public RelayCommand SubmitCommand { get; set; } 
     public RelayCommand CancelCommand { get; set; }
 
 }

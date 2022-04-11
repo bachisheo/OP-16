@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OP_17.Models;
 
 namespace OP_17.ViewModels;
 
@@ -38,7 +37,7 @@ public class DishViewModel:ObservableObject
 
     public ObservableCollection<double?> ProductsCounts { get; set; }
 
-    public List<double?> ProductsAllCounts => ProductsCounts.Select(c => c * AllSales).ToList();
+    public List<double?> AllProductCounts => ProductsCounts.Select(c => c * AllSales).ToList();
 
    
 
@@ -54,7 +53,9 @@ public class DishViewModel:ObservableObject
         ProductsCounts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ProductsCounts));
     }
 
-    private void ThisOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+
+
+    private void ThisOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
@@ -66,13 +67,14 @@ public class DishViewModel:ObservableObject
                 break;
             case nameof(AllSales):
                 OnPropertyChanged(nameof(AllPrice));
-                OnPropertyChanged(nameof(ProductsAllCounts));
+                OnPropertyChanged(nameof(AllProductCounts));
                 break;
             case nameof(ProductsCounts):
-                OnPropertyChanged(nameof(ProductsAllCounts));
+                OnPropertyChanged(nameof(AllProductCounts));
                 break;
         }
     }
+
 
     private string _name;
     private int? _code;

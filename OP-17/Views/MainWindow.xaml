@@ -3,25 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:OP_17.ViewModels"
         xmlns:design="clr-namespace:OP_17.ViewModels.Design"
         xmlns:converters="clr-namespace:OP_17.Services.Converters"
-        xmlns:views="clr-namespace:OP_17.Views"
         mc:Ignorable="d"
         Title="Форма ОП-17"
-        MinWidth="1200" MinHeight="450"
+        MinWidth="1300" MinHeight="450"
         d:DataContext="{d:DesignInstance design:DesignMainViewModel, IsDesignTimeCreatable=True}" d:DesignHeight="602.48" d:DesignWidth="1278" >
     <Window.Resources>
         <converters:DateConverter x:Key="DateConverter"/>
-        <DataTemplate x:Key="DataGridHeaderTemplate">
-            <Grid
-                x:Name="ContainerFilterGrid"
-                Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}, Mode=FindAncestor, AncestorLevel=1}, Path=ActualWidth}"
-                HorizontalAlignment="Stretch"
-                Background="Transparent">
-                <TextBlock Text="{Binding}" />
-            </Grid>
-        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -63,10 +52,10 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Номер "/>
-                    <TextBox Name="DocNumber" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding DocumentNumber}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
+                    <TextBox Name="DocNumber" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding DocumentNumber, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
                     <TextBlock Grid.Column="2" Text=" от "/>
                     <DatePicker Name="DocName" Grid.Column="3"
-                                Text="{Binding DocumentDateTime, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                                Text="{Binding DocumentDateTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
                 </Grid>
 
                 <Grid Margin="0,5">
@@ -88,10 +77,10 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Отчетный период c "/>
                     <DatePicker Name="ReportDateFrom" Grid.Column="1" 
-                                Text="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                                Text="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
                     <TextBlock Grid.Column="2" Text=" по "/>
                     <DatePicker Name="ReportDateTo" Grid.Column="3"
-                                Text="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                                Text="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
                 </Grid>
             </StackPanel>
 
@@ -138,68 +127,74 @@
 
         <TabControl Grid.Row="2">
             <TabItem Header="Блюда">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid IsSharedSizeScope="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding ElementName=CardColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=NameColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=CodeColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FirstDateColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=SecondDateColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=ThirdDateColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FourthDateColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FifthDateColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=AllSalesColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=PriceColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=AllPriceColumn, Path=ActualWidth}"/>
-                        </Grid.ColumnDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition  Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0"  Grid.Column="3" Grid.ColumnSpan="6" BorderBrush="LightGray" BorderThickness="1,1,0,0">
-                            <TextBlock Text="Фактический выпуск за отчетный период" TextAlignment="Center" TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Калькуляционная карточка" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Наименование" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Код" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1" >
-                            <DatePicker VerticalAlignment="Center" Text="{Binding SalesDates[0], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="4" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[1], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[2], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="6" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[3], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[4], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
-                        </Border>
-                        <Border Grid.Row="1"  Grid.Column="8" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Всего" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Цена" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="10" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Сумма" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-                    </Grid>
-                    <DataGrid  
+                        <Grid IsSharedSizeScope="True" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ElementName=CardColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=NameColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=CodeColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FifthDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=AllSalesColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=PriceColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0"  Grid.Column="3" Grid.ColumnSpan="6" BorderBrush="LightGray" BorderThickness="1,1,0,0">
+                                <TextBlock Text="Фактический выпуск блюд за отчетный период, единиц" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Номер калькуляционной карточки" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,0">
+                                <TextBlock Text="Блюдо" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Наименование" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Код" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1" >
+                                <DatePicker VerticalAlignment="Center" Text="{Binding SalesDates[0], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="4" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[1], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[2], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="6" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[3], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <DatePicker VerticalAlignment="Center"  Text="{Binding SalesDates[4], Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource DateConverter}}"/>
+                            </Border>
+                            <Border Grid.Row="1"  Grid.Column="8" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Всего" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Цена продажи блюда, руб. коп." TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="10" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                                <TextBlock Text="Сумма, руб. коп." TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
+                        <DataGrid  
                         Grid.Row="1"
+                        BorderThickness="1,1,1,0"
                         Name="DishesTable"
                         CanUserAddRows="True"
                         CanUserDeleteRows="True"
@@ -211,105 +206,152 @@
                         HeadersVisibility="None"
                         ItemsSource="{Binding Dishes}"
                         VerticalScrollBarVisibility="Auto">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="CardColumn" Binding="{Binding Card, TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="NameColumn" Binding="{Binding Name, TargetNullValue=''}" Width="3*"/>
-                            <DataGridTextColumn x:Name="CodeColumn" Binding="{Binding Code, TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Sales[0], TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Sales[1], TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Sales[2], TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Sales[3], TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Sales[4], TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="AllSalesColumn" Binding="{Binding AllSales}" Width="2*" IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Price, TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="AllPriceColumn" Binding="{Binding AllPrice}" Width="2*" IsReadOnly="True"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Продукты">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid IsSharedSizeScope="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding ElementName=DishColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FirstProductColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FirstProductSumColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=SecondProductColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=SecondProductSumColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=ThirdProductColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=ThirdProductSumColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FourthProductColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FourthProductSumColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FifthProductColumn, Path=ActualWidth}"/>
-                            <ColumnDefinition Width="{Binding ElementName=FifthProductSumColumn, Path=ActualWidth}"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        
-                        <Border Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="Блюдо" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[0]}"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[1]}"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="4" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"  Text="{Binding Products[2]}"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="6" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[3]}"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="8" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="9" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,1,1">
-                            <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[4]}"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
-                            <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-                        <Border Grid.Row="1" Grid.Column="10" BorderBrush="LightGray" BorderThickness="1,1,1,1">
-                            <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
-                        </Border>
-
-
-
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="CardColumn" Binding="{Binding Card, TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="NameColumn" Binding="{Binding Name, TargetNullValue=''}" Width="3*"/>
+                                <DataGridTextColumn x:Name="CodeColumn" Binding="{Binding Code, TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Sales[0], TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Sales[1], TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Sales[2], TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Sales[3], TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Sales[4], TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="AllSalesColumn" Binding="{Binding AllSales}" Width="2*" IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Price, TargetNullValue=''}" Width="2*"/>
+                                <DataGridTextColumn x:Name="AllPriceColumn" Binding="{Binding AllPrice}" Width="2*" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Row="2" IsSharedSizeScope="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ElementName=CardColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=NameColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=CodeColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FifthDateColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=AllSalesColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=PriceColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Text="Итого " TextAlignment="Right"/>
+                            <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummarySales[0]}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummarySales[1]}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummarySales[2]}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="6" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummarySales[3]}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="7" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummarySales[4]}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="8" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummaryAllSales}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="9" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="10" BorderBrush="Black" BorderThickness="1,0,1,1">
+                                <TextBlock Text="{Binding SummaryAllPrice}" TextAlignment="Left" TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
                     </Grid>
-                    <DataGrid  
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header ="Продукты">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid IsSharedSizeScope="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ElementName=DishColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FifthProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Grid.RowSpan="3"  Grid.Column="0" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="Блюдо" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="10" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                                <TextBlock Text="Наименование продуктов и норма по сборнику рецептур, кг" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[0]}"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[1]}"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="3" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="4" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"  Text="{Binding Products[2]}"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="5" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="6" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="7" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[3]}"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="7" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="8" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="9" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                                <TextBox TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2" Text="{Binding Products[4]}"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="9" BorderBrush="LightGray" BorderThickness="1,1,0,1">
+                                <TextBlock Text="На одну порцию" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="10" BorderBrush="LightGray" BorderThickness="1,1,1,1">
+                                <TextBlock Text="На фактический выпуск" TextAlignment="Center" VerticalAlignment="Center"  TextWrapping="Wrap" Margin="2"/>
+                            </Border>
+
+
+
+                        </Grid>
+                        <DataGrid  
                         Grid.Row="1"
                         Name="ProductsTable"
                         CanUserAddRows="True"
@@ -322,27 +364,70 @@
                         HeadersVisibility="None"
                         ItemsSource="{Binding Dishes}"
                         VerticalScrollBarVisibility="Auto">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="DishColumn" Binding="{Binding Name, TargetNullValue=''}" Width="2*" />
-                            <DataGridTextColumn x:Name="FirstProductColumn" Binding="{Binding ProductsCounts[0], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FirstProductSumColumn" Binding="{Binding ProductsAllCounts[0]}" Width="1*"  IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="SecondProductColumn" Binding="{Binding ProductsCounts[1], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="SecondProductSumColumn" Binding="{Binding ProductsAllCounts[1]}" Width="1*"  IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="ThirdProductColumn" Binding="{Binding ProductsCounts[2], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="ThirdProductSumColumn" Binding="{Binding ProductsAllCounts[2]}" Width="1*"  IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="FourthProductColumn" Binding="{Binding ProductsCounts[3], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FourthProductSumColumn" Binding="{Binding ProductsAllCounts[3]}" Width="1*"  IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="FifthProductColumn" Binding="{Binding ProductsCounts[4], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FifthProductSumColumn" Binding="{Binding ProductsAllCounts[4]}" Width="1*"  IsReadOnly="True"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="DishColumn" Binding="{Binding Name, TargetNullValue=''}" Width="2*" />
+                                <DataGridTextColumn x:Name="FirstProductColumn" Binding="{Binding ProductsCounts[0], TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="FirstProductSumColumn" Binding="{Binding AllProductCounts[0]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="SecondProductColumn" Binding="{Binding ProductsCounts[1], TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="SecondProductSumColumn" Binding="{Binding AllProductCounts[1]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="ThirdProductColumn" Binding="{Binding ProductsCounts[2], TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="ThirdProductSumColumn" Binding="{Binding AllProductCounts[2]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="FourthProductColumn" Binding="{Binding ProductsCounts[3], TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="FourthProductSumColumn" Binding="{Binding AllProductCounts[3]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="FifthProductColumn" Binding="{Binding ProductsCounts[4], TargetNullValue=''}" Width="1*"/>
+                                <DataGridTextColumn x:Name="FifthProductSumColumn" Binding="{Binding AllProductCounts[4]}" Width="1*"  IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Row="2" IsSharedSizeScope="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ElementName=DishColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FirstProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=SecondProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=ThirdProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FourthProductSumColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition Width="{Binding ElementName=FifthProductColumn, Path=ActualWidth}"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Всего " TextAlignment="Right"/>
+                            <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummaryAllProductCounts[0], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummaryAllProductCounts[1], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="6" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummaryAllProductCounts[2], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="7" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="8" BorderBrush="Black" BorderThickness="1,0,0,1">
+                                <TextBlock Text="{Binding SummaryAllProductCounts[3], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                            <Border Grid.Column="9" BorderBrush="Black" BorderThickness="1,0,0,1">
+                            </Border>
+                            <Border Grid.Column="10" BorderBrush="Black" BorderThickness="1,0,1,1">
+                                <TextBlock Text="{Binding SummaryAllProductCounts[4], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
 
         <StackPanel Grid.Row="3" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,15,0,15">
             <Button Content="Сформировать отчет" Command="{Binding GenerateReportCommand}" Width="160" Height="30" Margin="15,0"/>
             <Button Content="Подписать" Command="{Binding SignCommand}"  Width="160" Margin="15,0"/>
+            <Button Content="Дебуг" Visibility="Collapsed" Command="{Binding DebugCommand}"  Width="160" Margin="15,0"/>
         </StackPanel>
     </Grid>
 
