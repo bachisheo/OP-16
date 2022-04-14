@@ -8,21 +8,20 @@ namespace OP_17.Views
     /// </summary>
     public partial class SignatureWindow
     {
-        private SignatureViewModel _viewModel;
-        public SignatureViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                _viewModel = value ?? new SignatureViewModel(
-                    new RelayCommand(() => this.DialogResult = true),
-                    new RelayCommand(() => this.DialogResult = false));
-                DataContext = _viewModel;
-            }
-        }
+        public SignatureViewModel ViewModel { get; set; }
 
-        public SignatureWindow()
+        public SignatureWindow(SignatureViewModel signatureViewModel)
         {
+            ViewModel = new SignatureViewModel();
+            ViewModel.CompanyHead = signatureViewModel.CompanyHead;
+            ViewModel.CompanyHeadPost = signatureViewModel.CompanyHeadPost;
+            ViewModel.Former = signatureViewModel.Former;
+            ViewModel.FormerPost = signatureViewModel.FormerPost;
+            ViewModel.ProductionHead = signatureViewModel.ProductionHead;
+            ViewModel.SubmitCommand = new RelayCommand(() => this.DialogResult = true);
+            ViewModel.CancelCommand = new RelayCommand(() => this.DialogResult = false);
+            DataContext = ViewModel;
+
             InitializeComponent();
         }
     }

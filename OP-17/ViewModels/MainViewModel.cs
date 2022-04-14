@@ -17,7 +17,6 @@ namespace OP_17.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
-    #region Header
 
     public string DocumentNumber
     {
@@ -52,121 +51,90 @@ public class MainViewModel : ObservableObject
     }
 
     public string CompanyName { get; set; }
+
     public string CompanyOKPO { get; set; }
+
     public string CompanyUnit { get; set; }
+
     public string CompanyOKDP { get; set; }
 
-    private DateTime _documentDateTime;
-    private DateTime? _startDate;
-    private DateTime? _endDate;
-    private string _documentNumber;
+    public ObservableCollection<DateTime?> SalesDates { get; set; }
 
-    #endregion
-
-    #region DishesPage
-
-    public ObservableCollection<DateTime?> SalesDates
-    {
-        get
-        {
-            if (_salesDates.All(d => d == null) && StartDate != null && EndDate != null)
-            {
-                _salesDates[0] = StartDate;
-                for (int i = 1; i < 5; i++)
-                    _salesDates[i] = _salesDates[i - 1]?.AddDays(1);
-            }
-
-            return _salesDates;
-        }
-    }
-
-    private readonly ObservableCollection<DateTime?> _salesDates;
-
-    #endregion
-
-    #region ProductsPage
-
-    public ObservableCollection<string> Products { get; }
-
-    #endregion
-
-    #region Signature
+    public ObservableCollection<string> Products { get; set; }
 
     public SignatureViewModel SignatureVM { get; set; }
 
-    #endregion
-
-
-    public LimitedSizeObservableCollection<DishViewModel> Dishes { get; set; }
+    public ObservableCollection<DishViewModel> Dishes { get; set; }
 
     public List<int?> SummarySales => Dishes
         .Select(d => d.Sales)
-        .Aggregate(new ObservableCollection<int?>(new int?[5]),
-            (sum, list) =>
-                new ObservableCollection<int?>(sum.Zip(list,
-                    (x, y) => x == null ? y : y == null ? x : x + y)))
+        .AggregateList((x, y) => x == null ? y : y == null ? x : x + y)
         .ToList();
 
     public int? SummaryAllSales => Dishes.Sum(d => d.AllSales);
 
     public double? SummaryAllPrice => Dishes.Sum(d => d.AllPrice);
 
-
-    public List<double?> SummaryAllProductCounts => Dishes
-        .Select(d => d.AllProductCounts)
-        .Aggregate(new ObservableCollection<double?>(new double?[5]),
-            (sum, list) =>
-                new ObservableCollection<double?>(sum.Zip(list,
-                    (x, y) => x == null ? y : y == null ? x : x + y)))
-        .ToList();
-
-    public RelayCommand DebugCommand => new(Debug);
-
-    private void Debug()
-    {
-
-    }
+    public List<double?> SummaryAllProductCounts =>
+        Dishes
+            .Select(d => d.AllProductCounts)
+            .AggregateList((x, y) => x == null ? y : y == null ? x : x + y)
+            .ToList();
 
     public RelayCommand SignCommand { get; set; }
+
     public RelayCommand GenerateReportCommand { get; set; }
 
     public MainViewModel()
+    {
+        Init();
+
+        PropertyChanged += ThisOnPropertyChanged;
+        Dishes.CollectionChanged += DishesCollectionChanged;
+
+        SignatureVM = new SignatureViewModel();
+    }
+
+    private void Init()
     {
         CompanyName = string.Empty;
         CompanyOKPO = string.Empty;
         CompanyUnit = string.Empty;
         CompanyOKDP = string.Empty;
         DocumentOperation = string.Empty;
-        PropertyChanged += ThisOnPropertyChanged;
         DocumentDateTime = DateTime.Now;
         _documentNumber = "1";
-        Dishes = new LimitedSizeObservableCollection<DishViewModel>(5);
-        Dishes.CollectionChanged += DishesCollectionChanged;
-        _salesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
         _startDate = DateTime.Now.AddDays(-4);
         _endDate = DateTime.Now;
 
+        Dishes = new ObservableCollection<DishViewModel>();
+        SalesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
+        SalesDates[0] = StartDate;
+        for (int i = 1; i < 5; i++)
+            SalesDates[i] = SalesDates[i - 1]?.AddDays(1);
         Products = new ObservableCollection<string>(new string[5]);
 
-        GenerateReportCommand = new RelayCommand(() =>
-        {
-            var exporter = new ExcelExporter();
-            var file = exporter.Export(this);
-           var res = MessageBox.Show($"Сохранено как {file}. Открыть файл?", "", MessageBoxButton.YesNo);
-           if (res != MessageBoxResult.Yes) return;
-
-           FileInfo fi = new FileInfo(file);
-           ProcessStartInfo proc = new ProcessStartInfo(fi.FullName);
-           proc.UseShellExecute = true;
-           Process.Start(proc);
-        });
-
+        GenerateReportCommand = new RelayCommand(OnGenerateExcel);
         SignCommand = new RelayCommand(OnSign);
+
+    }
+
+    private void OnGenerateExcel()
+    {
+        var exporter = new ExcelExporter();
+        var file = exporter.Export(this);
+        var res = MessageBox.Show($"Сохранено как {file}. Открыть файл?", "", MessageBoxButton.YesNo);
+        if (res != MessageBoxResult.Yes) return;
+
+        FileInfo fi = new FileInfo(file);
+        ProcessStartInfo proc = new ProcessStartInfo(fi.FullName);
+        proc.UseShellExecute = true;
+        Process.Start(proc);
     }
 
     private void OnSign()
     {
-        SignatureWindow signatureWindow = new SignatureWindow { ViewModel = SignatureVM };
+        SignatureWindow signatureWindow = new SignatureWindow(SignatureVM);
         var result = signatureWindow.ShowDialog();
         if (result == true)
             SignatureVM = signatureWindow.ViewModel;
@@ -191,7 +159,6 @@ public class MainViewModel : ObservableObject
             case nameof(EndDate):
                 OnPropertyChanged(nameof(SalesDates));
                 break;
-
         }
     }
 
@@ -214,20 +181,22 @@ public class MainViewModel : ObservableObject
         }
     }
 
+
+    private DateTime _documentDateTime;
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+    private string _documentNumber;
+
 }
 
-public class LimitedSizeObservableCollection<T> : ObservableCollection<T>
+
+static class EnumerableExtensions
 {
-    public int Capacity { get; }
-
-    public LimitedSizeObservableCollection(int capacity)
+    public static IEnumerable<T> AggregateList<T>(this IEnumerable<IEnumerable<T>> list, Func<T, T, T> everyElementSelector)
     {
-        Capacity = capacity;
-    }
-
-    protected override void InsertItem(int index, T item)
-    {
-        if (Count < Capacity)
-            base.InsertItem(index, item);
+        return list.Aggregate(
+            new ObservableCollection<T>(new T[5]),
+            (curSum, nextList) =>
+                new ObservableCollection<T>(curSum.Zip(nextList, everyElementSelector)));
     }
 }

@@ -367,15 +367,15 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="DishColumn" Binding="{Binding Name, TargetNullValue=''}" Width="2*" />
                                 <DataGridTextColumn x:Name="FirstProductColumn" Binding="{Binding ProductsCounts[0], TargetNullValue=''}" Width="1*"/>
-                                <DataGridTextColumn x:Name="FirstProductSumColumn" Binding="{Binding AllProductCounts[0]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="FirstProductSumColumn" Binding="{Binding AllProductCounts[0], StringFormat={}{0:0.##}}" Width="1*"  IsReadOnly="True"/>
                                 <DataGridTextColumn x:Name="SecondProductColumn" Binding="{Binding ProductsCounts[1], TargetNullValue=''}" Width="1*"/>
-                                <DataGridTextColumn x:Name="SecondProductSumColumn" Binding="{Binding AllProductCounts[1]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="SecondProductSumColumn" Binding="{Binding AllProductCounts[1],StringFormat={}{0:0.##}}" Width="1*"  IsReadOnly="True"/>
                                 <DataGridTextColumn x:Name="ThirdProductColumn" Binding="{Binding ProductsCounts[2], TargetNullValue=''}" Width="1*"/>
-                                <DataGridTextColumn x:Name="ThirdProductSumColumn" Binding="{Binding AllProductCounts[2]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="ThirdProductSumColumn" Binding="{Binding AllProductCounts[2],StringFormat={}{0:0.##}}" Width="1*"  IsReadOnly="True"/>
                                 <DataGridTextColumn x:Name="FourthProductColumn" Binding="{Binding ProductsCounts[3], TargetNullValue=''}" Width="1*"/>
-                                <DataGridTextColumn x:Name="FourthProductSumColumn" Binding="{Binding AllProductCounts[3]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="FourthProductSumColumn" Binding="{Binding AllProductCounts[3],StringFormat={}{0:0.##}}" Width="1*"  IsReadOnly="True"/>
                                 <DataGridTextColumn x:Name="FifthProductColumn" Binding="{Binding ProductsCounts[4], TargetNullValue=''}" Width="1*"/>
-                                <DataGridTextColumn x:Name="FifthProductSumColumn" Binding="{Binding AllProductCounts[4]}" Width="1*"  IsReadOnly="True"/>
+                                <DataGridTextColumn x:Name="FifthProductSumColumn" Binding="{Binding AllProductCounts[4],StringFormat={}{0:0.##}}" Width="1*"  IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <Grid Grid.Row="2" IsSharedSizeScope="True">
@@ -396,27 +396,27 @@
                             <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,0,1">
                             </Border>
                             <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,0,1">
-                                <TextBlock Text="{Binding SummaryAllProductCounts[0], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding SummaryAllProductCounts[0], StringFormat={}{0:0.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
                             </Border>
                             <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,0,1">
                             </Border>
                             <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,0,1">
-                                <TextBlock Text="{Binding SummaryAllProductCounts[1], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding SummaryAllProductCounts[1], StringFormat={}{0:0.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
                             </Border>
                             <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,0,1">
                             </Border>
                             <Border Grid.Column="6" BorderBrush="Black" BorderThickness="1,0,0,1">
-                                <TextBlock Text="{Binding SummaryAllProductCounts[2], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding SummaryAllProductCounts[2], StringFormat={}{0:0.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
                             </Border>
                             <Border Grid.Column="7" BorderBrush="Black" BorderThickness="1,0,0,1">
                             </Border>
                             <Border Grid.Column="8" BorderBrush="Black" BorderThickness="1,0,0,1">
-                                <TextBlock Text="{Binding SummaryAllProductCounts[3], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding SummaryAllProductCounts[3], StringFormat={}{0:0.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
                             </Border>
                             <Border Grid.Column="9" BorderBrush="Black" BorderThickness="1,0,0,1">
                             </Border>
                             <Border Grid.Column="10" BorderBrush="Black" BorderThickness="1,0,1,1">
-                                <TextBlock Text="{Binding SummaryAllProductCounts[4], StringFormat={}{0:#.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding SummaryAllProductCounts[4], StringFormat={}{0:0.##}}" TextAlignment="Left" VerticalAlignment="Center"  TextWrapping="Wrap"/>
                             </Border>
                         </Grid>
                     </Grid>

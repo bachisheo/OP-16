@@ -10,6 +10,9 @@ public class SignatureViewModel:ObservableObject
         SubmitCommand = submitCommand;
         CancelCommand = cancelCommand;
     }
+    public SignatureViewModel()
+    {
+    }
 
     public string FormerPost { get; set; } = string.Empty;
     public string Former { get; set; }= string.Empty;

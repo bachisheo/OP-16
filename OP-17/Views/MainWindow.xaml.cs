@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
 using OP_17.ViewModels;
+using OP_17.ViewModels.Design;
 
 namespace OP_17.Views
 {
