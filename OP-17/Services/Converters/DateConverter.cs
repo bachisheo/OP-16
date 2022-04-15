@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace OP_17.Services.Converters;
+namespace obshepit_form_16.Services.Converters;
 
 public class DateConverter : IValueConverter
 {

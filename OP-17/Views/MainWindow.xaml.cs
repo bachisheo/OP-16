@@ -1,9 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
-using OP_17.ViewModels;
-using OP_17.ViewModels.Design;
+using obshepit_form_16.ViewModels;
 
-namespace OP_17.Views
+namespace obshepit_form_16.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

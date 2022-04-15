@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,46 +9,23 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OP_17.Services;
-using OP_17.Views;
+using obshepit_form_16.Services;
 
-namespace OP_17.ViewModels;
+namespace obshepit_form_16.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
+    public string FIO { get; set; }
+    public string Post { get; set; }
 
-    public string DocumentNumber
-    {
-        get => _documentNumber;
-        set => SetProperty(ref _documentNumber, value);
-    }
+    public string DocumentNumber { get; set; }
 
-    public DateTime DocumentDateTime
-    {
-        get => _documentDateTime;
-        set
-        {
-            SetProperty(ref _documentDateTime, value);
-            OnPropertyChanged(nameof(DocumentDate));
-        }
-    }
-
-    public string DocumentDate => DocumentDateTime.ToString("dd.MM.yyyy");
+    public DateTime? DocumentDateTime { get; set; }
 
     public string DocumentOperation { get; set; }
 
-    public DateTime? StartDate
-    {
-        get => _startDate;
-        set => SetProperty(ref _startDate, value);
-    }
-
-    public DateTime? EndDate
-    {
-        get => _endDate;
-        set => SetProperty(ref _endDate, value);
-    }
-
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
     public string CompanyName { get; set; }
 
     public string CompanyOKPO { get; set; }
@@ -60,39 +36,21 @@ public class MainViewModel : ObservableObject
 
     public ObservableCollection<DateTime?> SalesDates { get; set; }
 
-    public ObservableCollection<string> Products { get; set; }
+    public ObservableCollection<ProductViewModel> Products { get; set; }
 
-    public SignatureViewModel SignatureVM { get; set; }
-
-    public ObservableCollection<DishViewModel> Dishes { get; set; }
-
-    public List<int?> SummarySales => Dishes
-        .Select(d => d.Sales)
+    public List<double?> SummaryCountsSums => Products
+        .Select(d => d.CountsSums)
         .AggregateList((x, y) => x == null ? y : y == null ? x : x + y)
+        .Select(db => db.HasValue ? Math.Round(db.Value, 2) : (double?)null)
         .ToList();
 
-    public int? SummaryAllSales => Dishes.Sum(d => d.AllSales);
-
-    public double? SummaryAllPrice => Dishes.Sum(d => d.AllPrice);
-
-    public List<double?> SummaryAllProductCounts =>
-        Dishes
-            .Select(d => d.AllProductCounts)
-            .AggregateList((x, y) => x == null ? y : y == null ? x : x + y)
-            .ToList();
-
-    public RelayCommand SignCommand { get; set; }
 
     public RelayCommand GenerateReportCommand { get; set; }
 
     public MainViewModel()
     {
         Init();
-
-        PropertyChanged += ThisOnPropertyChanged;
-        Dishes.CollectionChanged += DishesCollectionChanged;
-
-        SignatureVM = new SignatureViewModel();
+        Products.CollectionChanged += ProductsCollectionChanged;
     }
 
     private void Init()
@@ -102,21 +60,10 @@ public class MainViewModel : ObservableObject
         CompanyUnit = string.Empty;
         CompanyOKDP = string.Empty;
         DocumentOperation = string.Empty;
-        DocumentDateTime = DateTime.Now;
-        _documentNumber = "1";
-        _startDate = DateTime.Now.AddDays(-4);
-        _endDate = DateTime.Now;
 
-        Dishes = new ObservableCollection<DishViewModel>();
+        Products = new ObservableCollection<ProductViewModel>();
         SalesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
-        SalesDates[0] = StartDate;
-        for (int i = 1; i < 5; i++)
-            SalesDates[i] = SalesDates[i - 1]?.AddDays(1);
-        Products = new ObservableCollection<string>(new string[5]);
-
         GenerateReportCommand = new RelayCommand(OnGenerateExcel);
-        SignCommand = new RelayCommand(OnSign);
-
     }
 
     private void OnGenerateExcel()
@@ -132,61 +79,31 @@ public class MainViewModel : ObservableObject
         Process.Start(proc);
     }
 
-    private void OnSign()
-    {
-        SignatureWindow signatureWindow = new SignatureWindow(SignatureVM);
-        var result = signatureWindow.ShowDialog();
-        if (result == true)
-            SignatureVM = signatureWindow.ViewModel;
-    }
 
-    private void DishesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void ProductsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        for (int i = 0; i < Products.Count; i++)
+        {
+            Products[i].RowNumber = i + 1;
+        }
+
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            var dish = (DishViewModel)e.NewItems![0]!;
-            dish.Card = Dishes.Select(d => d.Card).ToImmutableSortedSet().Last() + 1;
-            dish.Code = Dishes.Select(d => d.Code).ToImmutableSortedSet().Last() + 1;
-            dish.PropertyChanged += DishOnPropertyChanged;
+            (((ProductViewModel)e.NewItems![0])!).PropertyChanged += ProductOnPropertyChanged;
         }
     }
 
-    private void ThisOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+
+
+    private void ProductOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
-            case nameof(StartDate):
-            case nameof(EndDate):
-                OnPropertyChanged(nameof(SalesDates));
+            case nameof(ProductViewModel.CountsSums):
+                OnPropertyChanged(nameof(SummaryCountsSums));
                 break;
         }
     }
-
-    private void DishOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(DishViewModel.Sales):
-                OnPropertyChanged(nameof(SummarySales));
-                break;
-            case nameof(DishViewModel.AllSales):
-                OnPropertyChanged(nameof(SummaryAllSales));
-                break;
-            case nameof(DishViewModel.AllPrice):
-                OnPropertyChanged(nameof(SummaryAllPrice));
-                break;
-            case nameof(DishViewModel.ProductsCounts):
-                OnPropertyChanged(nameof(SummaryAllProductCounts));
-                break;
-        }
-    }
-
-
-    private DateTime _documentDateTime;
-    private DateTime? _startDate;
-    private DateTime? _endDate;
-    private string _documentNumber;
-
 }
 
 
