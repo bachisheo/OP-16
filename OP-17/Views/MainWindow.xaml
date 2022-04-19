@@ -21,15 +21,15 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="450,5" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock FontSize="18" FontWeight="Bold" Text =" Ведомость №" VerticalAlignment="Center"/>
-            <TextBox FontSize="18" MinWidth="60" Name="DocNumber" VerticalAlignment="Center" Text="{Binding DocumentNumber, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
-            <TextBlock FontSize="18" FontWeight="Bold" Text =" от " VerticalAlignment="Center"/>
-            <DatePicker Name="DocName" FontSize="18" 
+        <StackPanel  Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock FontSize="16" FontWeight="Bold" Text =" Ведомость №" VerticalAlignment="Center"/>
+            <TextBox FontSize="16" MinWidth="60" Name="DocNumber" VerticalAlignment="Center" Text="{Binding DocumentNumber, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
+            <TextBlock FontSize="16" FontWeight="Bold" Text =" от " VerticalAlignment="Center"/>
+            <DatePicker Name="DocName" FontSize="16" 
                                 Text="{Binding DocumentDateTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
         </StackPanel>
-        <Grid Margin="0, 0, 0, 20" Grid.Row="1">
-            <TextBlock TextAlignment="Center" FontSize="18" FontWeight="Bold">
+        <Grid Margin="0, 0, 0, 15" Grid.Row="1">
+            <TextBlock TextAlignment="Center" FontSize="16" FontWeight="Bold">
                     учета остатков и товаров на складе (в кладовой)
             </TextBlock>
         </Grid>
@@ -203,62 +203,45 @@
                         HeadersVisibility="None"
                         ItemsSource="{Binding ProductsInfo}"
                         IsTextSearchEnabled="True"
-                        VerticalScrollBarVisibility="Auto">
+                        VerticalScrollBarVisibility="Auto"
+                        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+                        >
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="RowNumber" Binding="{Binding RowNumber, TargetNullValue=''}" Width="1*" IsReadOnly="True"/>
 
-                            <DataGridComboBoxColumn  Width="2*"
-                                                    SelectedItemBinding="{Binding Product}">
-                                <DataGridComboBoxColumn.ElementStyle>
-                                    <Style TargetType="ComboBox">
-                                        <Setter 
-                                            Property="ItemsSource"
-                                            Value="{Binding ProductsList, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <Setter Property="IsEditable" Value="True"/>
-                                        <Setter Property="DisplayMemberPath" Value="Name"/>
-
-                                    </Style>
-                                </DataGridComboBoxColumn.ElementStyle>
-
-                                <DataGridComboBoxColumn.EditingElementStyle>
-                                    <Style TargetType="ComboBox">
-                                        <Setter 
-                                            Property="ItemsSource"
-                                            Value="{Binding ProductsList, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <Setter 
-                                            Property="IsEditable" 
-                                            Value="True"/>
-                                        <Setter 
-                                            Property="DisplayMemberPath" 
-                                            Value="Name"/>
-                                        <Setter 
-                                            Property="Text" 
-                                            Value="{Binding  ComboBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                    </Style>
-                                </DataGridComboBoxColumn.EditingElementStyle>
-                            </DataGridComboBoxColumn>
-                            <!--<DataGridComboBoxColumn x:Name="ProductNameColumn" 
-                                                    IsReadOnly="False"
-                                                    ItemsSource="{Binding Source={StaticResource ProductsSource}}" 
-                                                    DisplayMemberPath="Name"  
-                                                    SelectedItemBinding="{Binding Product, UpdateSourceTrigger=PropertyChanged}" 
-                                                    Width="3*"
-                                                    
-                                                     />-->
-                            <DataGridTextColumn x:Name="ProductCodeColumn" Binding="{Binding Product.Code, UpdateSourceTrigger=PropertyChanged}" Width="1*"/>
-                            <DataGridTextColumn x:Name="EINameColumn" Binding="{Binding Product.NameEi}" Width="1*"/>
-                            <DataGridTextColumn x:Name="EICodeColumn" Binding="{Binding Product.CodeEi, TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Product.Price, TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Counts[0], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FirstSumColumn" Binding="{Binding CountsSums[0], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Counts[1], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="SecondSumColumn" Binding="{Binding CountsSums[1], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Counts[2], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="ThirdSumColumn" Binding="{Binding CountsSums[2], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Counts[3], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FourthSumColumn" Binding="{Binding CountsSums[3], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Counts[4], TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="FifthSumColumn" Binding="{Binding CountsSums[4], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTemplateColumn x:Name="ProductNameColumn" Width="3*" >
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding ProductsSource}"
+                                                  SelectedItem="{Binding Product, UpdateSourceTrigger=PropertyChanged}"
+                                                  Text="{Binding ComboBoxText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                                  DisplayMemberPath="Name"
+                                                  IsEditable="True"
+                                                  StaysOpenOnEdit="True"
+                                                  IsDropDownOpen="True"
+                                                  IsTextSearchEnabled="False"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Product.Name}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn x:Name="ProductCodeColumn" Binding="{Binding Product.Code, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="EINameColumn" Binding="{Binding Product.NameEi}" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="EICodeColumn" Binding="{Binding Product.CodeEi}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Product.Price}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Counts[0]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FirstSumColumn" Binding="{Binding CountsSums[0]}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Counts[1]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="SecondSumColumn" Binding="{Binding CountsSums[1]}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Counts[2]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="ThirdSumColumn" Binding="{Binding CountsSums[2]}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Counts[3]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FourthSumColumn" Binding="{Binding CountsSums[3]}" IsReadOnly="True" Width="1*"/>
+                            <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Counts[4]}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FifthSumColumn" Binding="{Binding CountsSums[4]}" IsReadOnly="True" Width="1*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2" IsSharedSizeScope="True" HorizontalAlignment="Right" Margin="0, 0, 2, 0">
@@ -310,7 +293,7 @@
         </StackPanel>
         <DockPanel LastChildFill="False" Grid.Row="4" Margin="50, 20" >
             <TextBlock DockPanel.Dock="Left" >                                
-                <Hyperlink Command="{Binding SomeCommand, ElementName=window}"> Рсшифровка подписи проверящего
+                <Hyperlink Command="{Binding OpenSignCommand}"> Рсшифровка подписи
                 </Hyperlink>
             </TextBlock>
             <Button DockPanel.Dock="Right" Content="Сформировать отчет" Command="{Binding GenerateReportCommand}" Width="160" Height="30"  />

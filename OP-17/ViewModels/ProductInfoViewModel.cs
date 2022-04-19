@@ -14,25 +14,28 @@ public class ProductInfoViewModel:ObservableObject
     public string ComboBoxText
     {
         get => _comboBoxText;
-        set => this.SetProperty(ref _comboBoxText, value);
+        set
+        {
+            this.SetProperty(ref _comboBoxText, value);
+            OnPropertyChanged(nameof(ProductsSource));
+        }
     }
 
-    public bool isReadOnly
-    {
-        get;
-        set;
-    }
+    private List<Product> _productDirectory;
+    public bool isReadOnly => Product == null;
     public Product Product
     {
         get => _product;
-        set => this.SetProperty(ref _product, value);
+        set
+        {
+            this.SetProperty(ref _product, value);
+            OnPropertyChanged(nameof(isReadOnly));
+            OnPropertyChanged(nameof(CountsSums));
+        }
     }
 
-    public ObservableCollection<Product> ProductsList
-    {
-        get => _productsList;
-        set =>this.SetProperty(ref _productsList, value);
-    }
+    public List<Product> ProductsSource => _productDirectory.Where(x => x.Name.Contains(ComboBoxText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
 
     public int RowNumber { get; set; }
     public ObservableCollection<int?> Counts { get; set; }
@@ -42,43 +45,18 @@ public class ProductInfoViewModel:ObservableObject
     public ProductInfoViewModel()
     {
 
-        ProductsList = GenerateProducts();
+        _productDirectory = GenerateProducts();
         Counts = new ObservableCollection<int?>(new int?[5]);
-        this.PropertyChanged += ThisOnPropertyChanged;
         Counts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(Counts));
+        Counts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(CountsSums));
     }
 
-    private void ThisOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(Counts):
-                OnPropertyChanged(nameof(CountsSums));
-                break;
-            case nameof(Product):
-                OnPropertyChanged(nameof(CountsSums));
-                break;
-            case nameof(ComboBoxText):
-                ProductsList = GenerateProducts();
-                var rightProducts = new ObservableCollection<Product>();
-                foreach (var prod in ProductsList)
-                {
-                    if (prod.Name.Contains(ComboBoxText))
-                    {
-                        rightProducts.Add(prod);
-                    }
-                }
-                ProductsList = rightProducts;
-                break;
-        }
-    }
     private Product _product;
-    private string _comboBoxText;
-    private ObservableCollection<Product> _productsList;
+    private string _comboBoxText = string.Empty;
 
-    public ObservableCollection<Product> GenerateProducts()
+    public List<Product> GenerateProducts()
     {
-        return new ObservableCollection<Product>
+        return new List<Product>
         {
             new("Вишня замороженная", 12, "кг", 166, 150),
             new("Смесь овощей для супа", 34, "кг", 166, 90),

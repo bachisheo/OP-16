@@ -18,12 +18,17 @@ namespace obshepit_form_16.Views
     /// <summary>
     /// Логика взаимодействия для Sign.xaml
     /// </summary>
-    public partial class Sign : Window
+    public partial class SignWindow : Window
     {
-        public Sign(SignViewModel signVM)
+        public SignWindow(SignViewModel signVM)
         {
             DataContext = signVM;
             InitializeComponent();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using obshepit_form_16.Models;
 using obshepit_form_16.Services;
+using obshepit_form_16.Views;
 
 namespace obshepit_form_16.ViewModels;
 
@@ -19,7 +20,7 @@ public class MainViewModel : ObservableObject
     private string _comboBoxText;
 
 
-    public string DocumentNumber { get; set; }
+    public string DocumentNumber { get; set; } 
    
     public DateTime? DocumentDateTime { get; set; }
 
@@ -27,7 +28,7 @@ public class MainViewModel : ObservableObject
 
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public string CompanyName { get; set; }
+    public string CompanyName { get; set; } 
 
     public string CompanyOKPO { get; set; }
 
@@ -38,6 +39,7 @@ public class MainViewModel : ObservableObject
     public ObservableCollection<DateTime?> SalesDates { get; set; }
  
     public ObservableCollection<ProductInfoViewModel> ProductsInfo { get; set; }
+    public SignViewModel SingVM = new();
 
     public List<double?> SummaryCountsSums => ProductsInfo
         .Select(d => d.CountsSums)
@@ -51,27 +53,29 @@ public class MainViewModel : ObservableObject
 
     public MainViewModel()
     {
-      
         Init();
         ProductsInfo.CollectionChanged += ProductsCollectionChanged;
     }
 
    
-
-
     private void Init()
     {
-        CompanyName = string.Empty;
-        CompanyOKPO = string.Empty;
-        CompanyUnit = string.Empty;
-        CompanyOKDP = string.Empty;
-        DocumentOperation = string.Empty;
-
+        CompanyName = "ООО \"Пора покушать\"";
+        CompanyOKPO = "56789123";
+        CompanyUnit = "Склад №32";
+        CompanyOKDP = "033043";
+        DocumentNumber = "12";
         ProductsInfo = new ObservableCollection<ProductInfoViewModel>();
         SalesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
         GenerateReportCommand = new RelayCommand(OnGenerateExcel);
+        OpenSignCommand = new RelayCommand(SetSign);
     }
 
+    private void SetSign()
+    {
+        var signWindow = new SignWindow(SingVM);
+        signWindow.ShowDialog();
+    }
     private void OnGenerateExcel()
     {
         var exporter = new ExcelExporter();
