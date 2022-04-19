@@ -6,7 +6,7 @@
         xmlns:converters="clr-namespace:obshepit_form_16.Services.Converters" xmlns:viewmodels="clr-namespace:obshepit_form_16.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="Форма ОП-16"
-        MinWidth="1300" MinHeight="450"
+        MinWidth="800" MinHeight="450"
         d:DesignHeight="602.48" d:DesignWidth="1278" >
     <Window.Resources>
         <converters:DateConverter x:Key="DateConverter"/>
@@ -41,53 +41,46 @@
                 </Style>
                 <Style TargetType="TextBox">
                     <Setter Property="Margin" Value="0, 2"></Setter>
-                    <Setter Property="Height" Value="30"/>
+                    <Setter Property="Height" Value="20"/>
                 </Style>
             </Grid.Resources>
 
 
-            
-                <Grid HorizontalAlignment="Center" Margin="0, 0, 0, 5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="340"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="330"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Margin="0,5,0,5" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" >
-                        <TextBlock Text="Отчетный период c "/>
-                        <DatePicker Name="ReportDateFrom"
-                                Text="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
-                        <TextBlock Text=" по "/>
-                        <DatePicker Name="ReportDateTo"
-                                Text="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
-                    </StackPanel>
-                    <TextBlock Grid.Column="0" Grid.Row="1"  Text="Организация "/>
-                    <TextBox Grid.Column="1"  Grid.Row="1"  Text="{Binding CompanyName}" />
-                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Подразделение "/>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CompanyUnit}"/>
-                    <TextBlock  Grid.Row="0" Grid.Column="2" Text="Вид операции " Margin="50, 0, 0, 0"/>
-                    <TextBox Name="Operation" Grid.Row="0" Grid.Column="3" Text="{Binding DocumentOperation}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
-                    <TextBlock  Grid.Row="1" Grid.Column="2" Text="ОКПО " Padding="50, 0, 0, 0"/>
-                    <TextBox  Grid.Row="1" Grid.Column="3" Text="{Binding CompanyOKPO}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
-                    <TextBlock Grid.Row="2"  Grid.Column="2" Text="ОКДП "  Margin="50, 0, 0, 0" />
-                    <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding CompanyOKDP}"/>
 
-                <TextBlock Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"  Text="Материально ответственное лицо" Margin="50, 0, 0, 10"/>
-                    <TextBlock Grid.Column="4" Grid.Row="1"  Text="ФИО " Margin="50, 0, 0, 0" />
-                    <TextBox Grid.Column="5"  Grid.Row="1"  Text="{Binding FIO}" />
-                <TextBlock Grid.Column="4" Grid.Row="2"  Text="Должность " Margin="50, 0, 0, 0"/>
-                <TextBox Grid.Column="5"  Grid.Row="2"  Text="{Binding Post}" />
+            <Grid HorizontalAlignment="Center" Margin="0, 0, 0, 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="340"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="0,5,0,5" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" >
+                    <TextBlock Text="Отчетный период c "/>
+                    <DatePicker Name="ReportDateFrom"
+                                Text="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
+                    <TextBlock Text=" по "/>
+                    <DatePicker Name="ReportDateTo"
+                                Text="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateConverter}}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="0" Grid.Row="1"  Text="Организация "/>
+                <TextBox Grid.Column="1"  Grid.Row="1"  Text="{Binding CompanyName}" />
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Подразделение "/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CompanyUnit}"/>
+                <TextBlock  Grid.Row="0" Grid.Column="2" Text="Вид операции " Margin="50, 0, 0, 0"/>
+                <TextBox Name="Operation" Grid.Row="0" Grid.Column="3" Text="{Binding DocumentOperation}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
+                <TextBlock  Grid.Row="1" Grid.Column="2" Text="ОКПО " Padding="50, 0, 0, 0"/>
+                <TextBox  Grid.Row="1" Grid.Column="3" Text="{Binding CompanyOKPO}" PreviewTextInput="OnlyNumberOnPreviewTextInput"/>
+                <TextBlock Grid.Row="2"  Grid.Column="2" Text="ОКДП "  Margin="50, 0, 0, 0" />
+                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding CompanyOKDP}"/>
+
             </Grid>
 
-          
+
         </Grid>
 
         <StackPanel  Grid.Row="3">
@@ -208,24 +201,63 @@
                         CanUserSortColumns="False"
                         AutoGenerateColumns="False"
                         HeadersVisibility="None"
-                        ItemsSource="{Binding Products}"
+                        ItemsSource="{Binding ProductsInfo}"
+                        IsTextSearchEnabled="True"
                         VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="RowNumber" Binding="{Binding RowNumber, TargetNullValue=''}" Width="1*" IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="ProductNameColumn" Binding="{Binding Name, TargetNullValue=''}" Width="3*"/>
-                            <DataGridTextColumn x:Name="ProductCodeColumn" Binding="{Binding Code, TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="EINameColumn" Binding="{Binding NameEi, TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="EICodeColumn" Binding="{Binding CodeEi, TargetNullValue=''}" Width="1*"/>
-                            <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Price, TargetNullValue=''}" Width="2*"/>
-                            <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Counts[0], TargetNullValue=''}" Width="2*"/>
+
+                            <DataGridComboBoxColumn  Width="2*"
+                                                    SelectedItemBinding="{Binding Product}">
+                                <DataGridComboBoxColumn.ElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter 
+                                            Property="ItemsSource"
+                                            Value="{Binding ProductsList, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Setter Property="IsEditable" Value="True"/>
+                                        <Setter Property="DisplayMemberPath" Value="Name"/>
+
+                                    </Style>
+                                </DataGridComboBoxColumn.ElementStyle>
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter 
+                                            Property="ItemsSource"
+                                            Value="{Binding ProductsList, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Setter 
+                                            Property="IsEditable" 
+                                            Value="True"/>
+                                        <Setter 
+                                            Property="DisplayMemberPath" 
+                                            Value="Name"/>
+                                        <Setter 
+                                            Property="Text" 
+                                            Value="{Binding  ComboBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+                            </DataGridComboBoxColumn>
+                            <!--<DataGridComboBoxColumn x:Name="ProductNameColumn" 
+                                                    IsReadOnly="False"
+                                                    ItemsSource="{Binding Source={StaticResource ProductsSource}}" 
+                                                    DisplayMemberPath="Name"  
+                                                    SelectedItemBinding="{Binding Product, UpdateSourceTrigger=PropertyChanged}" 
+                                                    Width="3*"
+                                                    
+                                                     />-->
+                            <DataGridTextColumn x:Name="ProductCodeColumn" Binding="{Binding Product.Code, UpdateSourceTrigger=PropertyChanged}" Width="1*"/>
+                            <DataGridTextColumn x:Name="EINameColumn" Binding="{Binding Product.NameEi}" Width="1*"/>
+                            <DataGridTextColumn x:Name="EICodeColumn" Binding="{Binding Product.CodeEi, TargetNullValue=''}" Width="1*"/>
+                            <DataGridTextColumn x:Name="PriceColumn" Binding="{Binding Product.Price, TargetNullValue=''}" Width="1*"/>
+                            <DataGridTextColumn x:Name="FirstDateColumn" Binding="{Binding Counts[0], TargetNullValue=''}" Width="1*"/>
                             <DataGridTextColumn x:Name="FirstSumColumn" Binding="{Binding CountsSums[0], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Counts[1], TargetNullValue=''}" Width="2*"/>
+                            <DataGridTextColumn x:Name="SecondDateColumn" Binding="{Binding Counts[1], TargetNullValue=''}" Width="1*"/>
                             <DataGridTextColumn x:Name="SecondSumColumn" Binding="{Binding CountsSums[1], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Counts[2], TargetNullValue=''}" Width="2*"/>
+                            <DataGridTextColumn x:Name="ThirdDateColumn" Binding="{Binding Counts[2], TargetNullValue=''}" Width="1*"/>
                             <DataGridTextColumn x:Name="ThirdSumColumn" Binding="{Binding CountsSums[2], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Counts[3], TargetNullValue=''}" Width="2*"/>
+                            <DataGridTextColumn x:Name="FourthDateColumn" Binding="{Binding Counts[3], TargetNullValue=''}" Width="1*"/>
                             <DataGridTextColumn x:Name="FourthSumColumn" Binding="{Binding CountsSums[3], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
-                            <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Counts[4], TargetNullValue=''}" Width="2*"/>
+                            <DataGridTextColumn x:Name="FifthDateColumn" Binding="{Binding Counts[4], TargetNullValue=''}" Width="1*"/>
                             <DataGridTextColumn x:Name="FifthSumColumn" Binding="{Binding CountsSums[4], TargetNullValue=''}" IsReadOnly="True" Width="1*"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -257,21 +289,21 @@
                         </Border>
                         <Border Grid.Column="9" BorderBrush="Black" BorderThickness="1,0,0,1">
                             <TextBlock Text="{Binding SummaryCountsSums[4]}" TextAlignment="Left" TextWrapping="Wrap"/>
-                        </Border>   
+                        </Border>
                         <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,0,1">
                             <TextBlock Text=" X" TextAlignment="Left" TextWrapping="Wrap"/>
-                        </Border>  
+                        </Border>
                         <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,0,1">
                             <TextBlock Text=" X" TextAlignment="Left" TextWrapping="Wrap"/>
-                        </Border>  
+                        </Border>
                         <Border Grid.Column="6" BorderBrush="Black" BorderThickness="1,0,0,1">
                             <TextBlock Text=" X" TextAlignment="Left" TextWrapping="Wrap"/>
-                        </Border>  
+                        </Border>
                         <Border Grid.Column="8" BorderBrush="Black" BorderThickness="1,0,0,1">
                             <TextBlock Text=" X" TextAlignment="Left" TextWrapping="Wrap"/>
-                        </Border>  
-                  
-                        
+                        </Border>
+
+
                     </Grid>
                 </Grid>
             </ScrollViewer>

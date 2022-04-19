@@ -38,8 +38,8 @@ public class ExcelExporter
         _fields["companyOKPO"].Value = mainVM.CompanyOKPO;
         _fields["companyUnit"].Value = mainVM.CompanyUnit;
         _fields["companyOKDP"].Value = mainVM.CompanyOKDP;
-        _fields["Fio"].Value = mainVM.FIO;
-        _fields["Post"].Value = mainVM.Post;
+        //_fields["Fio"].Value = mainVM.FIO;
+        //_fields["Post"].Value = mainVM.Post;
         _fields["operation"].Value = mainVM.DocumentOperation;
         _fields["docNumber"].Value = Convert.ToInt32(mainVM.DocumentNumber);
         _fields["docDate"].Value = mainVM.DocumentDateTime?.ToString("dd.MM.yyyy");
@@ -60,7 +60,7 @@ public class ExcelExporter
         _sheet.Cells["CA20"].Value = mainVM.SalesDates[4]?.Year;
 
         int curRow = 25;
-        foreach (var prodVM in mainVM.Products)
+        foreach (var prodVM in mainVM.ProductsInfo)
         {
             FillProd(prodVM, curRow);
             curRow++;
@@ -79,20 +79,20 @@ public class ExcelExporter
         //_fields["companyHead"].Value = mainVM.SignatureVM?.CompanyHead;
     }
 
-    private void FillProd(ProductViewModel productVM, int row)
+    private void FillProd(ProductInfoViewModel productInfoVM, int row)
     {
         var rowCells = GetMergedCells(_sheet.Cells[$"A{row}:BX{row}"]).ToList();
-        rowCells[0].Value = productVM.RowNumber;
-        rowCells[1].Value = productVM.Name;
-        rowCells[2].Value = productVM.Code;
-        rowCells[3].Value = productVM.NameEi;
-        rowCells[4].Value = productVM.CodeEi;
-        rowCells[5].Value = productVM.Price;
+        rowCells[0].Value = productInfoVM.RowNumber;
+        rowCells[1].Value = productInfoVM.Product.Name;
+        rowCells[2].Value = productInfoVM.Product.Code;
+        rowCells[3].Value = productInfoVM.Product.NameEi;
+        rowCells[4].Value = productInfoVM.Product.CodeEi;
+        rowCells[5].Value = productInfoVM.Product.Price;
      
         for (int i = 0; i < 5; i++)
         {
-            rowCells[6 + 2 * i].Value = productVM.Counts[i];
-            rowCells[7 + 2 * i].Value = productVM.CountsSums[i];
+            rowCells[6 + 2 * i].Value = productInfoVM.Counts[i];
+            rowCells[7 + 2 * i].Value = productInfoVM.CountsSums[i];
         }
     }
 

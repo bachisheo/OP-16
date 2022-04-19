@@ -9,17 +9,18 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using obshepit_form_16.Models;
 using obshepit_form_16.Services;
 
 namespace obshepit_form_16.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
-    public string FIO { get; set; }
-    public string Post { get; set; }
+    private string _comboBoxText;
+
 
     public string DocumentNumber { get; set; }
-
+   
     public DateTime? DocumentDateTime { get; set; }
 
     public string DocumentOperation { get; set; }
@@ -35,10 +36,10 @@ public class MainViewModel : ObservableObject
     public string CompanyOKDP { get; set; }
 
     public ObservableCollection<DateTime?> SalesDates { get; set; }
+ 
+    public ObservableCollection<ProductInfoViewModel> ProductsInfo { get; set; }
 
-    public ObservableCollection<ProductViewModel> Products { get; set; }
-
-    public List<double?> SummaryCountsSums => Products
+    public List<double?> SummaryCountsSums => ProductsInfo
         .Select(d => d.CountsSums)
         .AggregateList((x, y) => x == null ? y : y == null ? x : x + y)
         .Select(db => db.HasValue ? Math.Round(db.Value, 2) : (double?)null)
@@ -46,12 +47,17 @@ public class MainViewModel : ObservableObject
 
 
     public RelayCommand GenerateReportCommand { get; set; }
+    public RelayCommand OpenSignCommand { get; set; }
 
     public MainViewModel()
     {
+      
         Init();
-        Products.CollectionChanged += ProductsCollectionChanged;
+        ProductsInfo.CollectionChanged += ProductsCollectionChanged;
     }
+
+   
+
 
     private void Init()
     {
@@ -61,7 +67,7 @@ public class MainViewModel : ObservableObject
         CompanyOKDP = string.Empty;
         DocumentOperation = string.Empty;
 
-        Products = new ObservableCollection<ProductViewModel>();
+        ProductsInfo = new ObservableCollection<ProductInfoViewModel>();
         SalesDates = new ObservableCollection<DateTime?>(new DateTime?[5]);
         GenerateReportCommand = new RelayCommand(OnGenerateExcel);
     }
@@ -82,14 +88,14 @@ public class MainViewModel : ObservableObject
 
     private void ProductsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        for (int i = 0; i < Products.Count; i++)
+        for (int i = 0; i < ProductsInfo.Count; i++)
         {
-            Products[i].RowNumber = i + 1;
+            ProductsInfo[i].RowNumber = i + 1;
         }
 
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            (((ProductViewModel)e.NewItems![0])!).PropertyChanged += ProductOnPropertyChanged;
+            (((ProductInfoViewModel)e.NewItems![0])!).PropertyChanged += ProductOnPropertyChanged;
         }
     }
 
@@ -99,11 +105,12 @@ public class MainViewModel : ObservableObject
     {
         switch (e.PropertyName)
         {
-            case nameof(ProductViewModel.CountsSums):
+            case nameof(ProductInfoViewModel.CountsSums):
                 OnPropertyChanged(nameof(SummaryCountsSums));
                 break;
         }
     }
+
 }
 
 
